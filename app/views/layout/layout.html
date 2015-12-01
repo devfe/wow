@@ -1,0 +1,32 @@
+{% import 'views/maco/ez.maco.html' as ez %}
+{#
+    注释：
+
+    1. 被继承的 layout 模板只用来规范通用的页面块(block)结构
+       具体的 block 块由页面 html 模板实现
+    3. 项目的 config 文件字段全部挂载到了模板引擎的 config
+       如：调用项目名 {{ config.appName }}
+    5. remote 标签会加载远程http内容到页面，可能会全面渲染变慢，谨慎使用
+#}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+
+    {% block style %}
+        {{ ez.link('../app/css/base.css') }}
+    {% endblock %}
+</head>
+<body>
+
+    {% block body %} {% endblock %}
+
+
+    {% block script %}
+        {{ ez.script('../app/js/base.js') }}
+    {% endblock %}
+
+    {{ ez.component_script(_component.list) }}
+</body>
+</html>
