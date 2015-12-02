@@ -2,24 +2,33 @@ var path = require('path');
 var gulp = require('gulp');
 var wow = require('./gulp/wow');
 
+var argv = require('minimist')(process.argv.slice(2));
+
 var uglify = require('gulp-uglify');
 var sass = require('gulp-ruby-sass');
 var nunjucksRender = require('gulp-nunjucks-render');
+var gls = require('gulp-live-server');
 var data = require('gulp-data');
 var replace = require('gulp-replace');
-var rimraf = require('gulp-rimraf');
+var clean = require('gulp-clean');
 
 var Util = require('./gulp/utils');
 
 var config = {
-    dest: 'build',
     source: 'app',
+    server: {
+        dir: 'www',
+        port: 1024,
+        index: true
+    },
+    dest: argv.w ? 'www' : 'build',
     component: 'components',
     scripts: ['app/**/*.js'],
     styles: ['app/**/*.scss'],
     views: ['app/views/*.html']
 };
 var componentPackage = {};
+nunjucksRender.nunjucks.configure(config.source, {watch: false});
 
 gulp.task('uglify', function() {
     return gulp.src(config.scripts)
@@ -97,7 +106,6 @@ function parseComponentTag () {
     });
 }
 function getComponents (components) {
-
 }
 function getComponentData (file) {
     return {
@@ -105,8 +113,7 @@ function getComponentData (file) {
     };
 }
 
-gulp.task('views', function() {
-    nunjucksRender.nunjucks.configure(config.source, {watch: false});
+gulp.task('nunjucks', function(bar) {
     return gulp.src(config.views, { base: config.source })
         .pipe(parseComponentTag())
         .pipe(data(getComponentData))
@@ -114,7 +121,17 @@ gulp.task('views', function() {
         .pipe(gulp.dest(config.dest));
 });
 
+gulp.task('server', ['watch'], function() {
+    wow.server(config.server.dir, config.server.port, {
+        index: config.server.index
+    });
+});
+gulp.task('watch', ['nunjucks', 'sass', 'uglify'], function() {
+    gulp.watch(config.views, ['nunjucks']);
+    gulp.watch(config.styles, ['sass']);
+    gulp.watch(config.scripts, ['uglify']);
+});
 gulp.task('clean', function(cb) {
-    return gulp.src(config.dest + '/**/*')
-        .pipe(rimraf({ force: true }));
+    return gulp.src(config.dest)
+        .pipe(clean());
 });

@@ -2,7 +2,7 @@
 node_modules
 build
 proj
-www/*
+www/
 .idea
 .*.swp
 ._*

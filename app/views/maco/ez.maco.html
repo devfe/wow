@@ -26,6 +26,17 @@
     <a target="_blank" href="//www.npmjs.com/package/{{ name }}">{{ name }}</a>
 {%- endmacro %}
 
-{% macro component_script(components) -%}
-    {% for item in components %},{{item}}{% endfor %}
+{% macro component_scripts(components) %}
+    {% for item in components %}
+    <script src="component/{{item}}/{{item}}.js"></script>
+    {% endfor %}
+{% endmacro %}
+{% macro component_script(components) %}
+    <script src="{% for item in components %}{% if loop.index!=1 %},{% endif %}component/{{item}}/{{item}}.js{% endfor %}"></script>
+{% endmacro %}
+{% macro component_styles(components) -%}
+    <link type="text/css" href="{% for item in components %}{% if loop.index!=1 %},{% endif %}component/{{item}}/{{item}}.js{% endfor %}" />
+{%- endmacro %}
+{% macro component_style(components) -%}
+    <link type="text/css" href="{% for item in components %}{% if loop.index!=1 %},{% endif %}component/{{item}}/{{item}}.css{% endfor %}" />
 {%- endmacro %}

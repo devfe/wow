@@ -1,13 +1,22 @@
 {
+  "description": "WOW - Ultimate component based gulp workflow",
+  "scripts": {
+    "start": "./node_modules/.bin/gulp views"
+  },
   "dependencies": {
+    "finalhandler": "^0.4.0",
     "gulp": "^3.9.0",
+    "gulp-clean": "^0.3.1",
     "gulp-clean-dest": "^0.1.0",
     "gulp-data": "^1.2.1",
+    "gulp-live-server": "0.0.29",
     "gulp-nunjucks-render": "^1.0.0",
     "gulp-preprocess": "^2.0.0",
     "gulp-replace": "^0.5.4",
-    "gulp-rimraf": "^0.2.0",
     "gulp-ruby-sass": "^2.0.6",
-    "gulp-uglify": "^1.5.1"
+    "gulp-uglify": "^1.5.1",
+    "minimist": "^1.2.0",
+    "serve-index": "^1.7.2",
+    "serve-static": "^1.10.0"
   }
 }
