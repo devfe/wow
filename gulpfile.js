@@ -7,32 +7,38 @@ var argv = require('minimist')(process.argv.slice(2));
 var uglify = require('gulp-uglify');
 var sass = require('gulp-ruby-sass');
 var nunjucksRender = require('gulp-nunjucks-render');
-var gls = require('gulp-live-server');
 var data = require('gulp-data');
 var replace = require('gulp-replace');
+var eslint = require('gulp-eslint');
+var gulpif = require('gulp-if');
 var clean = require('gulp-clean');
 
 var Util = require('./gulp/utils');
 
+var isWatch = argv._[0] === 'watch';
+
 var config = {
     source: 'app',
+    dest: isWatch ? 'www' : 'build',
+    component: 'components',
     server: {
         dir: 'www',
         port: 1024,
+        // 默认显示 index.html
         index: true
     },
-    dest: argv.w ? 'www' : 'build',
-    component: 'components',
-    scripts: ['app/**/*.js'],
+    views: ['app/views/*.html'],
     styles: ['app/**/*.scss'],
-    views: ['app/views/*.html']
+    scripts: ['app/**/*.js']
 };
 var componentPackage = {};
 nunjucksRender.nunjucks.configure(config.source, {watch: false});
 
 gulp.task('uglify', function() {
     return gulp.src(config.scripts)
-        .pipe(uglify())
+        .pipe(eslint())
+        .pipe(eslint.format())
+        .pipe(gulpif(!isWatch, uglify()))
         .pipe(gulp.dest(config.dest));
 });
 gulp.task('sass', function() {
