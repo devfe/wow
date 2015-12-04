@@ -11,7 +11,6 @@
     "gulp-eslint": "^1.1.1",
     "gulp-if": "^2.0.0",
     "gulp-nunjucks-render": "^1.0.0",
-    "gulp-preprocess": "^2.0.0",
     "gulp-replace": "^0.5.4",
     "gulp-ruby-sass": "^2.0.6",
     "gulp-uglify": "^1.5.1",

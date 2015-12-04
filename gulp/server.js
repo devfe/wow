@@ -3,16 +3,14 @@ var finalhandler = require('finalhandler');
 var serveIndex   = require('serve-index');
 var serveStatic  = require('serve-static');
 
-module.exports.server = function(dir, port, options) {
-    port || 1024;
-
-    var index = serveIndex(dir, {
+module.exports.server = function(config) {
+    var index = serveIndex(config.server.dir, {
         icons: true,
         hidden: true
     });
 
-    var serve = serveStatic(dir, {
-        index: options.index
+    var serve = serveStatic(config.server.dir, {
+        index: config.server.index
     });
 
     // Create server
@@ -25,7 +23,7 @@ module.exports.server = function(dir, port, options) {
     });
 
     // Listen
-    server.listen(port);
+    server.listen(config.server.port);
 
-    console.log('\n>>> Server is listen on port: ' + port);
+    console.log('\n>>> Server is listen on port: ' + config.server.port);
 };
