@@ -1,7 +1,12 @@
 {% extends 'views/layout/layout.html' %}
+
+{% block style %}
+    {{ ez.component_styles(_component.list) }}
+{% endblock %}
+        
+
 {% block body %}
     <div id="component">
-        {{ ez.component_scripts(_component.list) }}
     </div>
 
     {{ 1+4 }}

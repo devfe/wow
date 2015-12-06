@@ -5,7 +5,6 @@ var serveStatic  = require('serve-static');
 
 module.exports = function(config) {
     return function() {
-        console.log(config.server.dir);
         var index = serveIndex(config.server.dir, {
             icons: true,
             hidden: true

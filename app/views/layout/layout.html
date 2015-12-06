@@ -15,7 +15,7 @@
     <title></title>
 
     {% block style %}
-        {{ ez.link('../app/css/base.css') }}
+        {{ ez.link('../css/base.css') }}
     {% endblock %}
 </head>
 <body>
@@ -24,9 +24,8 @@
 
 
     {% block script %}
-        {{ ez.script('../app/js/base.js') }}
+        {{ ez.script('../js/base.js') }}
     {% endblock %}
 
-    {{ ez.component_script(_component.list) }}
 </body>
 </html>

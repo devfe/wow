@@ -39,7 +39,7 @@ gulp.task('nunjucks', nunjucks(config));
 gulp.task('sass', sass(config));
 gulp.task('server', server(config));
 gulp.task('clean', clean(config));
-gulp.task('start', ['nunjucks', 'uglify', 'server'], function() {
+gulp.task('start', ['nunjucks', 'uglify', 'sass', 'server'], function() {
     gulp.watch(config.views)
     .on('change', function(file) {
         nunjucks(config, file.path)();
@@ -49,5 +49,11 @@ gulp.task('start', ['nunjucks', 'uglify', 'server'], function() {
     .on('change', function(file) {
         console.log(file.path);
         uglify(config, file.path)();
+    });
+
+    gulp.watch(config.styles)
+    .on('change', function(file) {
+        console.log(file.path);
+        sass(config, file.path)();
     });
 });
