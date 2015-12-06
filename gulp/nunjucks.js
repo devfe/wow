@@ -77,11 +77,12 @@ function parseComponentTag (config) {
     });
 }
 
-module.exports = function(config) {
+module.exports = function(config, file) {
+    var src = file || config.views;
     nunjucksRender.nunjucks.configure(config.source, {watch: false});
 
     return function() {
-        return gulp.src(config.views, { base: config.source })
+        return gulp.src(src, { base: config.source })
             .pipe(parseComponentTag(config))
             .pipe(data(function (file) {
                 return {
