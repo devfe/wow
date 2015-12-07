@@ -78,7 +78,7 @@ function parseComponentTag (config) {
 }
 
 module.exports = function(config, file) {
-    var src = file || config.views;
+    var src = file || config.views[0];
     nunjucksRender.nunjucks.configure(config.source, {watch: false});
 
     return function() {

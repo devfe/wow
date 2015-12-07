@@ -1,22 +1,21 @@
 {% extends 'views/layout/layout.html' %}
 
 {% block style %}
+    {{ super() }}
     {{ ez.component_styles(_component.list) }}
 {% endblock %}
-        
+{% block script %}
+    {{ super() }}
+    {{ ez.component_scripts(_component.list) }}
+{% endblock %}  
+
 
 {% block body %}
-    <div id="component">
-    </div>
+    <h1>Wow... </h1>
 
-    {{ 1+4 }}
-
-    {% component name="sidebar" data="{ foo: 1, bar: 2 }" %}
     {% component name="module" data="{ id:'mod1', class: 'm2', foo: 1, bar: 2 }" %}
     {% component name="module" data="{ id:'mod2', class: 'm2', foo: 1, bar: 2 }" %}
 
-    <div id="box">
-        {{ foo }} !== 1;
-        {{ data }}
-    </div>
+    {% component name="sidebar" data="{ foo: 1, bar: 2 }" %}
+
 {% endblock %}

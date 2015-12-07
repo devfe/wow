@@ -1,8 +1,6 @@
 (function() {
-    var d = document.getElementById('fs');
+    var d = document.getElementById('mod1');
     var test = 'testaa';
 
-    d.style.display = 'block';
-
-    d.innerHTML = 'Hello';
+    d.innerHTML = 'Hello -> from component script.';
 })();
