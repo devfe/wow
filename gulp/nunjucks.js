@@ -89,6 +89,9 @@ module.exports = function(config, file) {
             .pipe(parseComponentTag(config))
             .pipe(data(function (file) {
                 return {
+                    name: config.name,
+                    version: config.version,
+                    production: config.production,
                     _component: config.components[file.path]
                 };
             }))

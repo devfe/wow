@@ -33,7 +33,7 @@ var config = {
 
     // 是否替换css中的路径为线上路径
     // 线上生产环境路径为 production + version + css相对地址
-    replaceUrl: isWatch ? false : true,
+    replaceUrl: !isWatch,
 
     // 匹配待目标文件
     views: ['app/views/*.html', 'app/{views,components}/*/*.html'],
@@ -54,7 +54,4 @@ gulp.task('nunjucks', nunjucks(config));
 gulp.task('sass', sass(config));
 gulp.task('server', server(config));
 gulp.task('clean', clean(config));
-gulp.task('start',
-    ['nunjucks', 'uglify', 'sass', 'copy', 'server'],
-    start(config)
-);
+gulp.task('start', ['nunjucks', 'uglify', 'sass', 'copy', 'server'], start(config));
