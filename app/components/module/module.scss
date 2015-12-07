@@ -1,6 +1,12 @@
+@import '../main/mixin/border.scss';
+
 .mod {
     // ref other component`s images
     margin-bottom: 10px;
-    border: 1px solid #ccc;
     padding: 10px 20px;
+    @include border-radius(1px solid red);
+
+    li {
+        display:inline;
+    }
 }

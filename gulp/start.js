@@ -1,6 +1,8 @@
 var path = require('path');
 var gulp = require('gulp');
 
+var livereload = require('gulp-livereload');
+
 // tasks
 var uglify = require('./uglify');
 var nunjucks = require('./nunjucks');
@@ -10,30 +12,30 @@ function getRelativePath(dir) {
     return path.relative(process.cwd(), dir);
 }
 
+function watchRunTask(src, cb) {
+    gulp.watch(src)
+        .on('change', function(file) {
+            console.log('File changed =>' + getRelativePath(file.path));
+            cb(file);
+        });
+}
+
 module.exports = function (config) {
     return function() {
-        gulp.watch(config.views[0])
-            .on('change', function(file) {
-                console.log('File changed =>' + getRelativePath(file.path));
-                nunjucks(config, file.path)();
-            });
+        livereload.listen({ basePath: config.server.dir });
+        watchRunTask(config.views[0], function (file) {
+            nunjucks(config, file.path)();
+        });
 
-        gulp.watch(config.views[1])
-            .on('change', function(file) {
-                console.log('File changed =>' + getRelativePath(file.path));
-                nunjucks(config)();
-            });
+        watchRunTask(config.views[1], function (file) {
+            nunjucks(config)();
+        });
 
-        gulp.watch(config.scripts)
-            .on('change', function(file) {
-                console.log('File changed =>' + getRelativePath(file.path));
-                uglify(config, file.path)();
-            });
-
-        gulp.watch(config.styles)
-            .on('change', function(file) {
-                console.log('File changed =>' + getRelativePath(file.path));
-                sass(config, file.path)();
-            });
+        watchRunTask(config.scripts, function (file) {
+            uglify(config, file.path)();
+        });
+        watchRunTask(config.styles, function (file) {
+            sass(config, file.path)();
+        });
     }
 };

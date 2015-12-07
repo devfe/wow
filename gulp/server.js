@@ -26,7 +26,9 @@ module.exports = function(config) {
         // Listen
         server.listen(config.server.port);
 
-        console.log('\n>>> Server is listen on port: ' + config.server.port);        
+        var banner = '\n--------------------------------------\n >>> Server is listen on port: ' + config.server.port + '\n--------------------------------------\n';
+
+        console.log(banner);
     };
     
 };

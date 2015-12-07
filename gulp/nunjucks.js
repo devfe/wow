@@ -3,6 +3,9 @@ var path = require('path');
 var gulp = require('gulp');
 var data = require('gulp-data');
 var replace = require('gulp-replace');
+var gulpif = require('gulp-if');
+var livereload = require('gulp-livereload');
+
 var nunjucksRender = require('gulp-nunjucks-render');
 
 function getTplVal(data) {
@@ -90,7 +93,8 @@ module.exports = function(config, file) {
                 };
             }))
             .pipe(nunjucksRender())
-            .pipe(gulp.dest(config.dest));
+            .pipe(gulp.dest(config.dest))
+            .pipe(gulpif(config.isWatch, livereload()));
     }
 };
 
