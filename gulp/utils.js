@@ -13,5 +13,19 @@ module.exports = {
     },
     isDataUri: function (url) {
         return /^data:image/.test(url);
+    },
+    getBanner: function (file, config) {
+        var filename = path.basename(file.path);
+        var now = new Date();
+        var dateString = 'YY-DD-MM h:m:s'.replace('YY', now.getFullYear())
+            .replace('DD', now.getDate())
+            .replace('MM', now.getMonth())
+            .replace('h', now.getHours())
+            .replace('m', now.getMinutes())
+            .replace('s', now.getSeconds());
+
+        return config.banner
+            .replace('${filename}', filename)
+            .replace('${date}', dateString);
     }
 };

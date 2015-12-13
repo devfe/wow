@@ -2,26 +2,12 @@ var path = require('path');
 var gulp = require('gulp');
 var sass = require('gulp-ruby-sass');
 var modify = require('gulp-modify');
+var wrapper = require('gulp-wrapper');
 var gulpif = require('gulp-if');
 var livereload = require('gulp-livereload');
+var Util = require('./utils');
 
 var _ = require('lodash');
-
-var Util = {
-    relativeDir: function (dir) {
-        return path.relative(process.cwd(), dir);
-    },
-    dirToPath: function(dir) {
-        dir = path.normalize(dir);
-        return dir.replace(/\\/g, '/');
-    },
-    isAbsUrl: function (url) {
-        return /^http:|https:|\/\//.test(url);
-    },
-    isDataUri: function (url) {
-        return /^data:image/.test(url);
-    }
-};
 
 function replaceUrl(content, file, config) {
     // 匹配所有的 url(...)
@@ -68,11 +54,19 @@ module.exports = function(config, file) {
     var src = file || config.styles;
 
     return function() {
-        return sass(src, { base: config.source })
+        return sass(src, {
+                base: config.source,
+                style: config.isRelease ? 'compressed' : 'compact'
+            })
             .on('error', sass.logError)
             .pipe(gulpif(config.replaceUrl, modify({
                 fileModifier: function(file, contents) {
                     return replaceUrl(contents, file.path, config);
+                }
+            })))
+            .pipe(gulpif(config.isRelease, wrapper({
+                header: function(file) {
+                    return Util.getBanner(file, config);
                 }
             })))
             .pipe(gulp.dest(config.dest))
