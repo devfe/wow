@@ -25,20 +25,3 @@
 {% macro npm_pkg(name) -%}
     <a target="_blank" href="//www.npmjs.com/package/{{ name }}">{{ name }}</a>
 {%- endmacro %}
-
-{% macro component_scripts(components) %}
-    {% for item in components %}
-    <script src="../components/{{item}}/{{item}}.js"></script>
-    {% endfor %}
-{% endmacro %}
-{% macro component_script(components) %}
-    <script src="{% for item in components %}{% if loop.index!=1 %},{% endif %}../components/{{item}}/{{item}}.js{% endfor %}"></script>
-{% endmacro %}
-{% macro component_styles(components) -%}
-    {% for item in components %}
-    <link type="text/css" rel="stylesheet" href="../components/{{item}}/{{item}}.css" />
-    {% endfor %}
-{%- endmacro %}
-{% macro component_style(components) -%}
-    <link type="text/css" rel="stylesheet" href="{% for item in components %}{% if loop.index!=1 %},{% endif %}../components/{{item}}/{{item}}.js{% endfor %}" />
-{%- endmacro %}

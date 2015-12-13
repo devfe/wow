@@ -8,6 +8,6 @@ module.exports = function (config, file) {
     return function() {
         return gulp.src(src, { base: config.source })
             .pipe(gulp.dest(config.dest))
-            .pipe(gulpif(config.isWatch, livereload()));
+            .pipe(gulpif(config._isWatch, livereload()));
     }
 };

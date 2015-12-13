@@ -56,7 +56,7 @@ module.exports = function(config, file) {
     return function() {
         return sass(src, {
                 base: config.source,
-                style: config.isRelease ? 'compressed' : 'compact'
+                style: config._isRelease ? 'compressed' : 'compact'
             })
             .on('error', sass.logError)
             .pipe(gulpif(config.replaceUrl, modify({
@@ -64,12 +64,12 @@ module.exports = function(config, file) {
                     return replaceUrl(contents, file.path, config);
                 }
             })))
-            .pipe(gulpif(config.isRelease, wrapper({
+            .pipe(gulpif(config._isRelease, wrapper({
                 header: function(file) {
                     return Util.getBanner(file, config);
                 }
             })))
             .pipe(gulp.dest(config.dest))
-            .pipe(gulpif(config.isWatch, livereload()));
+            .pipe(gulpif(config._isWatch, livereload()));
     }
 };

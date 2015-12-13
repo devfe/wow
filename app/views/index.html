@@ -2,11 +2,12 @@
 
 {% block style %}
     {{ super() }}
-    {{ ez.component_styles(_component.list) }}
+    {{ _component | source('style') }}
 {% endblock %}
+
 {% block script %}
     {{ super() }}
-    {{ ez.component_scripts(_component.list) }}
+    {{ _component | source('script') }}
 {% endblock %}  
 
 

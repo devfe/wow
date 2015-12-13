@@ -13,13 +13,13 @@ module.exports = function(config, file) {
         gulp.src(src, { base: config.source })
             .pipe(eslint())
             .pipe(eslint.format())
-            .pipe(gulpif(!config.isWatch, uglify()))
-            .pipe(gulpif(config.isRelease, wrapper({
+            .pipe(gulpif(!config._isWatch, uglify()))
+            .pipe(gulpif(config._isRelease, wrapper({
                 header: function(file) {
                     return Util.getBanner(file, config);
                 }
             })))
             .pipe(gulp.dest(config.dest))
-            .pipe(gulpif(config.isWatch, livereload()));
+            .pipe(gulpif(config._isWatch, livereload()));
     }
 };

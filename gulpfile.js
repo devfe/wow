@@ -22,7 +22,7 @@ var isRelease = argv._[0] === 'release';
 var config = {
     name: 'Project name',
     version: '1.0.0',
-    production: '//static.360buyimg.com/',
+    production: '//static.360buyimg.com/item',
 
     // 是否替换css中的路径为线上路径
     // 线上生产环境路径为 production + version + css相对地址
@@ -37,6 +37,7 @@ var config = {
     dest: isWatch ? 'www' : 'build',
     clean: ['www', 'build'],
     component: 'components',
+    view: 'views',
 
     // 匹配待目标文件
     views: ['app/views/*.html', 'app/{views,components}/*/*.html'],
@@ -63,30 +64,42 @@ var config = {
     },
 
     // val
-    isWatch: isWatch,
-    isRelease: isRelease,
-    // 组件 mapping, list
-    components: {},
+    _isWatch: isWatch,
+    _isRelease: isRelease,
+    // 组件
+    _components: {},
 };
 
-// register tasks
-gulp.task('sprites', function () {
-    return  gulp.src('app/components/main/i/*.png', { base: config.source })
-        .pipe(spritesmith({
-            imgName: 'sprite.png',
-            styleName: 'sprite.css',
-            imgPath: '../components/main/i/sprite.png'
-        }))
-        .pipe(gulpif('*.png', gulp.dest(config.dest, { base: config.source })))
-        .pipe(gulpif('*.css', gulp.dest(config.dest, { base: config.source })));
-});
+// // register tasks
+// gulp.task('sprites', function () {
+//     return  gulp.src('app/components/main/i/*.png', { base: config.source })
+//         .pipe(spritesmith({
+//             imgName: 'sprite.png',
+//             styleName: 'sprite.css',
+//             imgPath: '../components/main/i/sprite.png'
+//         }))
+//         .pipe(gulpif('*.png', gulp.dest(config.dest, { base: config.source })))
+//         .pipe(gulpif('*.css', gulp.dest(config.dest, { base: config.source })));
+// });
 
+// meta tasks
 gulp.task('uglify', uglify(config));
 gulp.task('copy', copy(config));
 gulp.task('nunjucks', nunjucks(config));
 gulp.task('sass', sass(config));
-gulp.task('server', server(config));
-gulp.task('deploy', ftp(config));
-gulp.task('release', ['uglify', 'sass', 'copy']);
+
+// extra tasks
 gulp.task('clean', clean(config));
+
+// workflow tasks
 gulp.task('start', ['nunjucks', 'uglify', 'sass', 'copy', 'server'], start(config));
+gulp.task('server', server(config));
+
+// deployment tasks
+gulp.task('deploy', ftp(config));
+gulp.task('release', ['uglify', 'sass', 'copy'], function() {
+    // gulp release -t
+    if (argv.t) {
+        nunjucks(config)();
+    };
+});
