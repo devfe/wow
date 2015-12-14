@@ -13,6 +13,7 @@ Wow - Ultimate component based gulp workflow
 Install npm packages & Just run gulp command:
 
 > $ npm install
+
 > $ gulp start
 
 then go browser open `http://localhost:1024` to enjoy.
