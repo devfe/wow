@@ -1,7 +1,7 @@
 {
   "description": "WOW - Ultimate component based gulp workflow",
   "scripts": {
-    "start": "./node_modules/.bin/gulp views"
+    "start": "./node_modules/.bin/gulp start"
   },
   "devDependencies": {
     "gulp": "^3.9.0",
