@@ -88,9 +88,10 @@ function parseReference(config, file) {
 
     function getName(str) {
         return str.replace(/\{\%\scomponent\s/g, '')
+            .replace(/\%\}/g, '')
             .replace(/\s/g, '')
             .replace(/'/g, '')
-            .replace(/"/g, '');
+            .replace(/"/g, '').trim();
     }
     /*
     _components:
@@ -104,12 +105,12 @@ function parseReference(config, file) {
     config._components[file.path] = {};
 
     results.forEach(function (r) {
-        console.log(r.split(',')[0]);
         var name = getName(r.split(',')[0]);
         var cPath = ComponentPath
             .replace('{cDir}', config.component)
             .replace(/{name}/g, name)
             .replace(/\.html/g, '');
+
         if (!config._components[file.path][cPath]) {
             config._components[file.path][cPath] = {
                 name: name,
@@ -200,9 +201,7 @@ function addBuiltInExtension(env, config) {
                 .replace('{cDir}', config.component)
                 .replace(/{name}/g, name);
 
-            var subEnv = nunjucksRender.nunjucks.configure(config.source, {watch: false});
-
-            return nunjucksRender.nunjucks.render(cPath, data);
+            return env.render(cPath, data);
         };
     };
 
