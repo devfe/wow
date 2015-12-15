@@ -2,24 +2,22 @@
 
 {% block style %}
     {{ super() }}
-    {{ _component | source('style') }}
+    {{ _components | source('style') }}
 {% endblock %}
 
 {% block script %}
     {{ super() }}
-    {{ _component | source('script') }}
-{% endblock %}  
+    {{ _components | source('script') }}
+{% endblock %}
 
 
 {% block body %}
     <h1>Wow... </h1>
 
-    {% component name="module" data="{ id:'mod1', class: 'm2', foo: 1, bar: 2 }" %}
-    {% component name="module" data="{ id:'mod2', class: 'm2', foo: 1, bar: 2 }" %}
 
-    {% component name="sidebar" data="{ foo: 1, bar: 2 }" %}
-
-
-    {% component name="footer" %}
+    {% component 'module', { id:'mod1', class: 'm2', foo: 1, bar: 2 } %}
+    {% component 'module', { id:'mod2', class: 'm2', foo: 1, bar: 2 } %}
+    {% component 'sidebar', { foo: 1, bar: 2 } %}
+    {% component 'footer' %}
 
 {% endblock %}

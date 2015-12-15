@@ -1,4 +1,3 @@
-var fs = require('fs');
 var path = require('path');
 
 var gulp = require('gulp');
@@ -10,6 +9,9 @@ var Util = require('./utils');
 
 var nunjucksRender = require('gulp-nunjucks-render');
 
+var ComponentPath = '{cDir}/{name}/{name}.html';
+
+/*
 function getTplVal(data) {
     var res = '';
     for( var key in data ) {
@@ -75,17 +77,65 @@ function parseComponentTag (config) {
         config._components[file.path] = _component;
     });
 }
+*/
+
+// 预先把组件引用拼成对象数据
+function parseReference(config, file) {
+    var content = String(file.contents);
+    var RE_COMPONENT = /\{\%\scomponent\s([^%]+)\%\}/g;
+
+    var results = content.match(RE_COMPONENT) || [];
+
+    function getName(str) {
+        return str.replace(/\{\%\scomponent\s/g, '')
+            .replace(/\s/g, '')
+            .replace(/'/g, '')
+            .replace(/"/g, '');
+    }
+    /*
+    _components:
+     {
+        "path/to/template/file": {
+            "path/to/component0": { name: 'c2', path: ""},
+            "path/to/component1": { name: 'c1', path: ""}
+        }
+     }
+    */
+    config._components[file.path] = {};
+
+    results.forEach(function (r) {
+        console.log(r.split(',')[0]);
+        var name = getName(r.split(',')[0]);
+        var cPath = ComponentPath
+            .replace('{cDir}', config.component)
+            .replace(/{name}/g, name)
+            .replace(/\.html/g, '');
+        if (!config._components[file.path][cPath]) {
+            config._components[file.path][cPath] = {
+                name: name,
+                path: cPath
+            };
+        }
+    });
+
+    return {
+        name: config.name,
+        version: config.version,
+        production: config.production,
+        _components: config._components[file.path]
+    };
+}
 
 function addBuiltInFilters(env, config) {
     // 过滤 components
-    // {{ _component | exclude('main', 'footer') | source('style') }}
+    // {{ _components | exclude('main', 'footer') | source('style') }}
     env.addFilter('exclude', function() {
         var args = Array.prototype.slice.call(arguments);
         var components = args.shift();
         var result = {};
 
         for ( var c in components ) {
-            console.log('--%s-%s--', args, components[c]['name']);
+            //console.log('--%s-%s--', args, components[c]['name']);
             if ( args.indexOf( components[c]['name'] ) < 0 ) {
                 result[c] = components[c];
             }
@@ -129,21 +179,55 @@ function addBuiltInFilters(env, config) {
     });
 }
 
+function addBuiltInExtension(env, config) {
+    /**
+     * {% component 'name' {title: 'Example', subtitle: 'An example component'} %}
+     */
+    var ComponentTag = function() {
+        this.tags = ['component'];
+
+        this.parse = function(parser, nodes, lexer) {
+            var token = parser.nextToken();
+
+            var args = parser.parseSignature(null, true);
+            parser.advanceAfterBlockEnd(token.value);
+
+            return new nodes.CallExtension(this, 'run', args);
+        };
+
+        this.run = function(context, name, data) {
+            var cPath = ComponentPath
+                .replace('{cDir}', config.component)
+                .replace(/{name}/g, name);
+
+            var subEnv = nunjucksRender.nunjucks.configure(config.source, {watch: false});
+
+            return nunjucksRender.nunjucks.render(cPath, data);
+        };
+    };
+
+    env.addExtension('component', new ComponentTag());
+}
+
 module.exports = function(config, file) {
     var src = file || config.views[0];
     var env = nunjucksRender.nunjucks.configure(config.source, {watch: false});
 
+    addBuiltInExtension(env, config);
     addBuiltInFilters(env, config);
 
     return function() {
         return gulp.src(src, { base: config.source })
-            .pipe(parseComponentTag(config))
+            //.pipe(parseComponentTag(config))
+            .pipe(data(function (file) {
+                return parseReference(config, file);
+            }))
             .pipe(data(function (file) {
                 return {
                     name: config.name,
                     version: config.version,
                     production: config.production,
-                    _component: config._components[file.path]
+                    _components: config._components[file.path]
                 };
             }))
             .pipe(nunjucksRender())
