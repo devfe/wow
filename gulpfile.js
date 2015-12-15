@@ -86,24 +86,20 @@ var config = {
 //         .pipe(gulpif('*.css', gulp.dest(config.dest, { base: config.source })));
 // });
 
-// meta tasks
+// Meta tasks
 gulp.task('uglify', uglify(config));
 gulp.task('copy', copy(config));
 gulp.task('nunjucks', nunjucks(config));
 gulp.task('sass', sass(config));
-
-// extra tasks
+gulp.task('server', server(config));
 gulp.task('clean', clean(config));
 
-// workflow tasks
+// Workflow tasks
 gulp.task('start', ['nunjucks', 'uglify', 'sass', 'copy', 'server'], start(config));
-gulp.task('server', server(config));
 
-// deployment tasks
+// Deployment tasks
 gulp.task('deploy', ftp(config));
 gulp.task('release', ['uglify', 'sass', 'copy'], function() {
     // gulp release -t
-    if (argv.t) {
-        nunjucks(config)();
-    };
+    if (argv.t) nunjucks(config)();
 });

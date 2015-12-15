@@ -28,4 +28,35 @@ then go browser open `http://localhost:1024` to enjoy.
     5. livereload
 3. Built-in boilerplate
 4. Easy to configuration
-    
+
+## CLI
+
+### $ gulp start
+
+Start a local server with livereload
+
+### $ gulp uglify
+
+Compress source script file to dest
+
+### $ gulp copy
+
+Copy source image file to dest
+
+### $ gulp nunjucks
+
+Compile nunjucks template to html
+
+### $ gulp sass
+
+Compile sass to css file
+
+### $ gulp deploy
+
+Upload dest file to remote ftp server
+
+### $ gulp release [-t]
+
+Release project to dest, if `-t` both with template file
+
+    Read the gulpfile is best way to know how it works.
