@@ -51,11 +51,11 @@ Compile nunjucks template to html
 
 Compile sass to css file
 
-### $ gulp deploy
+### $ gulp deploy [-t] [-f path/to/file] [-v=0.0.0]
 
 Upload dest file to remote ftp server
 
-### $ gulp release [-t]
+### $ gulp release [-t] [-f path/to/file]
 
 Release project to dest, if `-t` both with template file
 
