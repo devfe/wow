@@ -1,6 +1,10 @@
+var fs = require('fs');
 var path = require('path');
 
 module.exports = {
+    isExists: function(file) {
+        return fs.existsSync(file) && fs.readFileSync(file, 'utf8') !== '';
+    },
     relativeDir: function (dir) {
         return path.relative(process.cwd(), dir);
     },

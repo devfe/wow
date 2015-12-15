@@ -76,12 +76,6 @@ function parseComponentTag (config) {
     });
 }
 
-function isExists(file) {
-    // console.log('---[%s]---\n%s', file, fs.readFileSync(file, 'utf8'));
-    // 组件资源文件存在并且有值才会产生引用
-    return fs.existsSync(file) && fs.readFileSync(file, 'utf8') !== '';
-}
-
 function addBuiltInFilters(env, config) {
     // 过滤 components
     // {{ _component | exclude('main', 'footer') | source('style') }}
@@ -107,11 +101,13 @@ function addBuiltInFilters(env, config) {
         var prefix = path.relative(config.source, process.cwd());
         var tag = type === 'style'
             ? '<link type="text/css" rel="stylesheet" href="{{ref}}" />'
-            : '<script src="{{ref}}"></script>'
+            : '<script src="{{ref}}"></script>';
 
         for ( var c in components ) {
             var filename = path.join(config.source, c + EXT);
-            if ( isExists(filename) ) {
+
+            // 组件资源文件存在并且有内容才会产生引用
+            if ( Util.isExists(filename) ) {
                 // html 里面引用相对路径不需要app
                 paths.push(Util.dirToPath(path.join(prefix, c + EXT.replace('.scss', '.css'))));
             }

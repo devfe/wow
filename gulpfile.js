@@ -1,3 +1,4 @@
+var path = require('path');
 var gulp = require('gulp');
 
 // tasks
@@ -12,6 +13,8 @@ var start    = require('./gulp/start');
 var gulpif   = require('gulp-if');
 
 var spritesmith = require("gulp-spritesmith");
+
+var Util = require('./gulp/utils');
 
 // args
 var argv    = require('minimist')(process.argv.slice(2));
@@ -64,10 +67,11 @@ var config = {
     },
 
     // val
+    _arg: argv,
     _isWatch: isWatch,
     _isRelease: isRelease,
     // 组件
-    _components: {},
+    _components: {}
 };
 
 // // register tasks
