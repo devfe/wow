@@ -6,6 +6,7 @@ var replace = require('gulp-replace');
 var gulpif = require('gulp-if');
 var livereload = require('gulp-livereload');
 var Util = require('./utils');
+var _ = require('lodash');
 
 var nunjucksRender = require('gulp-nunjucks-render');
 
@@ -119,12 +120,6 @@ function parseReference(config, file) {
         }
     });
 
-    return {
-        name: config.name,
-        version: config.version,
-        production: config.production,
-        _components: config._components[file.path]
-    };
 }
 
 function addBuiltInFilters(env, config) {
@@ -201,7 +196,11 @@ function addBuiltInExtension(env, config) {
                 .replace('{cDir}', config.component)
                 .replace(/{name}/g, name);
 
-            return env.render(cPath, data);
+            return env.render(cPath, _.assign(data, {
+                name: config.name,
+                version: config.version,
+                production: config.production
+            }));
         };
     };
 
