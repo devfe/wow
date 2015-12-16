@@ -47,6 +47,25 @@ Copy source image file to dest
 
 Compile nunjucks template to html
 
+### $ gulp sprite
+
+Combine target images(config.sprite.src) to dest(config.sprite.dest) with sass(config.sprite.cssName) and image(config.sprite.imgName)
+
+    sprite: {
+        src: ['./app/components/**/sprite-*.+(jpg|png|gif)'],
+        dest: './app/components/main',
+        imgName: '_sprite.png',
+        cssName: '_sprite.scss'
+    }
+
+**step 1**: ref `_sprite.scss` in your sass file
+
+    @import "_sprite.scss";
+
+**step 2**: add sass mixin
+
+    @include sprites($spritesheet-sprites);
+
 ### $ gulp sass
 
 Compile sass to css file
