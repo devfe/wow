@@ -1,9 +1,10 @@
-@import "sprite.css";
+@import "_sprite.scss";
 
 h1 {
     border-bottom: 1px solid #333;
     padding-bottom: 10px;
 }
+
 a {
     text-decoration: none;
 }
@@ -14,4 +15,12 @@ body {
 }
 ul {
     padding-left: 0;
+}
+
+/* icons */
+.icons {
+    i {
+        display: inline-block;
+    }
+    @include sprites($spritesheet-sprites);
 }
