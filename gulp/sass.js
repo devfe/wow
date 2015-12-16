@@ -1,6 +1,7 @@
 var path = require('path');
 var gulp = require('gulp');
 var sass = require('gulp-ruby-sass');
+var minifyCss = require('gulp-minify-css');
 var modify = require('gulp-modify');
 var wrapper = require('gulp-wrapper');
 var gulpif = require('gulp-if');
@@ -69,6 +70,7 @@ module.exports = function(config, file) {
                     return Util.getBanner(file, config);
                 }
             })))
+            .pipe(gulpif(config._isRelease, minifyCss()))
             .pipe(gulp.dest(config.dest))
             .pipe(gulpif(config._isWatch, livereload()));
     }

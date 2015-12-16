@@ -1,8 +1,8 @@
-var path = require('path');
 var gulp = require('gulp');
 
 // tasks
 var copy     = require('./gulp/copy');
+var sprite   = require('./gulp/sprite');
 var uglify   = require('./gulp/uglify');
 var nunjucks = require('./gulp/nunjucks');
 var sass     = require('./gulp/sass');
@@ -10,11 +10,7 @@ var server   = require('./gulp/server');
 var ftp      = require('./gulp/ftp');
 var clean    = require('./gulp/clean');
 var start    = require('./gulp/start');
-var gulpif   = require('gulp-if');
 
-var spritesmith = require("gulp-spritesmith");
-
-var Util = require('./gulp/utils');
 
 // args
 var argv    = require('minimist')(process.argv.slice(2));
@@ -46,7 +42,14 @@ var config = {
     views: ['app/views/*.html', 'app/{views,components}/*/*.html'],
     styles: ['app/**/*.scss'],
     scripts: ['app/**/*.js'],
-    images: ['./app/components/**/*.+(jpg|png|gif)'],
+    images: ['./app/components/**/*.+(jpg|png|gif)', '!sprite-*.+(jpg|png|gif)'],
+
+    sprite: {
+        src: ['./app/components/**/sprite-*.+(jpg|png|gif)'],
+        dest: './app/components/main',
+        imgName: '_sprite.png',
+        cssName: '_sprite.css'
+    },
 
     // 本地静态服务器
     server: {
@@ -74,17 +77,8 @@ var config = {
     _components: {}
 };
 
-// // register tasks
-// gulp.task('sprites', function () {
-//     return  gulp.src('app/components/main/i/*.png', { base: config.source })
-//         .pipe(spritesmith({
-//             imgName: 'sprite.png',
-//             styleName: 'sprite.css',
-//             imgPath: '../components/main/i/sprite.png'
-//         }))
-//         .pipe(gulpif('*.png', gulp.dest(config.dest, { base: config.source })))
-//         .pipe(gulpif('*.css', gulp.dest(config.dest, { base: config.source })));
-// });
+ // register tasks
+gulp.task('sprite', sprite(config));
 
 // Meta tasks
 gulp.task('uglify', uglify(config));

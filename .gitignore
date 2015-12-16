@@ -3,6 +3,7 @@ node_modules
 build
 proj
 www/
+_sprite.*
 .idea
 .*.swp
 ._*
