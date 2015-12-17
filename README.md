@@ -53,5 +53,4 @@ Release project to dest, if `-t` both with template file
 - [ ] deploy single file
 - [ ] deploy specified verson of source code
 
-
     Read the gulpfile is best way to know how it works.
