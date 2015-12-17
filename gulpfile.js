@@ -1,4 +1,4 @@
-var gulp = require('gulp');
+var gulp     = require('gulp');
 
 // tasks
 var copy     = require('./gulp/copy');
@@ -12,12 +12,12 @@ var build    = require('./gulp/build');
 var clean    = require('./gulp/clean');
 var start    = require('./gulp/start');
 
-// args
-var argv    = require('minimist')(process.argv.slice(2));
-var isWatch = argv._[0] === 'start';
+// Args
+var argv     = require('minimist')(process.argv.slice(2));
+var isWatch  = argv._[0] === 'start';
 var isRelease = argv._[0] === 'release';
 
-// config
+// Configuration
 var config = {
     name: 'Project name',
     version: '1.0.0',
@@ -48,7 +48,7 @@ var config = {
         src: ['./app/components/**/sprite-*.+(jpg|png|gif)'],
         dest: './app/components/main',
         imgName: '_sprite.png',
-        cssName: '_sprite.css'
+        cssName: '_sprite.scss'
     },
 
     // 本地静态服务器
@@ -77,10 +77,8 @@ var config = {
     _components: {}
 };
 
- // register tasks
-gulp.task('sprite', sprite(config));
-
 // Meta tasks
+gulp.task('sprite', sprite(config));
 gulp.task('uglify', uglify(config));
 gulp.task('copy', copy(config));
 gulp.task('nunjucks', nunjucks(config));
