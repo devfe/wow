@@ -35,28 +35,23 @@ then go browser open `http://localhost:1024` to enjoy.
 
 Start a local server with livereload
 
-### $ gulp uglify
+### $ gulp build [-t] [-f path/to/file] [-v=0.0.0]
 
-Compress source script file to dest
+Build source to dest
 
-### $ gulp copy
+### $ gulp deploy 
 
-Copy source image file to dest
-
-### $ gulp nunjucks
-
-Compile nunjucks template to html
-
-### $ gulp sass
-
-Compile sass to css file
-
-### $ gulp deploy [-t] [-f path/to/file] [-v=0.0.0]
-
-Upload dest file to remote ftp server
+Upload **build** file to remote ftp server
 
 ### $ gulp release [-t] [-f path/to/file]
 
 Release project to dest, if `-t` both with template file
+
+### Todos
+
+- [ ] add git workflow
+- [ ] deploy single file
+- [ ] deploy specified verson of source code
+
 
     Read the gulpfile is best way to know how it works.

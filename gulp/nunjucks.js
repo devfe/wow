@@ -214,8 +214,8 @@ module.exports = function(config, file) {
     addBuiltInExtension(env, config);
     addBuiltInFilters(env, config);
 
-    return function() {
-        return gulp.src(src, { base: config.source })
+    return function(cb) {
+        gulp.src(src, { base: config.source })
             //.pipe(parseComponentTag(config))
             .pipe(data(function (file) {
                 return parseReference(config, file);
@@ -231,6 +231,8 @@ module.exports = function(config, file) {
             .pipe(nunjucksRender())
             .pipe(gulp.dest(config.dest))
             .pipe(gulpif(config._isWatch, livereload()));
+
+        cb();
     }
 };
 

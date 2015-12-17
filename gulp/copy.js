@@ -5,9 +5,10 @@ var livereload = require('gulp-livereload');
 module.exports = function (config, file) {
     var src = file || config.images;
 
-    return function() {
+    return function(cb) {
         return gulp.src(src, { base: config.source })
             .pipe(gulp.dest(config.dest))
+            .on('end', cb)
             .pipe(gulpif(config._isWatch, livereload()));
     }
 };

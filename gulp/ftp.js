@@ -7,7 +7,11 @@ var _ = require('lodash');
 module.exports = function (config, file) {
     var src = file || config.images;
     var ftpConfig = _.assign(config.deploy, {
-        log: gutil.log
+        log: function (type, file) {
+            if (/UP/.test(type)) {
+                return gutil.log.call(null, type, file);
+            }
+        }
     });
     var conn = ftp.create(ftpConfig);
 

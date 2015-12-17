@@ -8,9 +8,9 @@ var nunjucks = require('./gulp/nunjucks');
 var sass     = require('./gulp/sass');
 var server   = require('./gulp/server');
 var ftp      = require('./gulp/ftp');
+var build    = require('./gulp/build');
 var clean    = require('./gulp/clean');
 var start    = require('./gulp/start');
-
 
 // args
 var argv    = require('minimist')(process.argv.slice(2));
@@ -59,7 +59,7 @@ var config = {
         index: false
     },
 
-    // 部署远程ftp测试服务器
+    // 部署远程 ftp 测试服务器
     deploy: {
         host:     '127.0.0.1',
         user:     'ftpuser',
@@ -70,7 +70,7 @@ var config = {
     },
 
     // val
-    _arg: argv,
+    _argv: argv,
     _isWatch: isWatch,
     _isRelease: isRelease,
     // 组件
@@ -84,7 +84,8 @@ gulp.task('sprite', sprite(config));
 gulp.task('uglify', uglify(config));
 gulp.task('copy', copy(config));
 gulp.task('nunjucks', nunjucks(config));
-gulp.task('sass', sass(config));
+gulp.task('sass', ['sprite'], sass(config));
+gulp.task('ftp', ftp(config));
 gulp.task('server', server(config));
 gulp.task('clean', clean(config));
 
@@ -92,6 +93,7 @@ gulp.task('clean', clean(config));
 gulp.task('start', ['nunjucks', 'uglify', 'sass', 'copy', 'server'], start(config));
 
 // Deployment tasks
+gulp.task('build', build(config));
 gulp.task('deploy', ftp(config));
 gulp.task('release', ['uglify', 'sass', 'copy'], function() {
     // gulp release -t

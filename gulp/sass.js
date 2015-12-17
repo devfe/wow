@@ -54,7 +54,7 @@ function replaceUrl(content, file, config) {
 module.exports = function(config, file) {
     var src = file || config.styles;
 
-    return function() {
+    return function(cb) {
         return sass(src, {
                 base: config.source,
                 style: config._isRelease ? 'compressed' : 'compact'
@@ -72,6 +72,7 @@ module.exports = function(config, file) {
             })))
             .pipe(gulpif(config._isRelease, minifyCss()))
             .pipe(gulp.dest(config.dest))
+            .on('end', cb)
             .pipe(gulpif(config._isWatch, livereload()));
     }
 };

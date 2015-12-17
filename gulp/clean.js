@@ -2,15 +2,11 @@ var gulp = require('gulp');
 var clean = require('rimraf');
 
 module.exports = function (config) {
+    var src = config.clean;
+
     return function() {
-        config.clean.forEach(function (dir) {
-            clean(dir, function(err) {
-                if (err) {
-                    console.log('Clean working directory fail.');
-                } else {
-                    console.log('Clean working directory success.');
-                }
-            });
+        src.forEach(function (dir) {
+            clean.sync(dir);
         });
     }
 };
