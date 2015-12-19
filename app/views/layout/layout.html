@@ -3,10 +3,10 @@
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8" />
-    <title></title>
+    <title>Wow is awsome.</title>
 
     {% block style %}
-        {{ wow.link('../components/main/main.css') }}
+        {{ Tag('link', '../components/main/main.css') }}
     {% endblock %}
 </head>
 <body>
@@ -15,7 +15,7 @@
 
 
     {% block script %}
-        {{ wow.script('../components/main/main.js') }}
+        {{ Tag('script', '../components/main/main.js') }}
     {% endblock %}
 
 </body>

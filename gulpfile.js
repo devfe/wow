@@ -19,13 +19,9 @@ var isRelease = argv._[0] === 'release';
 
 // Configuration
 var config = {
-    name: 'Project name',
+    name: 'main',
     version: '1.0.0',
-    production: '//static.360buyimg.com/item',
-
-    // 是否替换css中的路径为线上路径
-    // 线上生产环境路径为 production + version + css相对地址
-    replaceUrl: !isWatch,
+    cdn: '//static.360buyimg.com',
 
     // 代码头注释
     /*!base.js => 2015-51-20 17:21:6 */
@@ -33,7 +29,7 @@ var config = {
 
     // 文件目录
     source: 'app',
-    dest: isWatch ? 'www' : 'build',
+    dest: 'build',
     clean: ['www', 'build'],
     component: 'components',
     view: 'views',
@@ -66,23 +62,38 @@ var config = {
         password: 'ftppass',
         parallel: 10,
         src: 'build/**',
-        dest: './item/main'
-    },
-
-    // val
-    _argv: argv,
-    _isWatch: isWatch,
-    _isRelease: isRelease,
-    // 组件
-    _components: {}
+        dest: './'
+    }
 };
+
+// Runtime val
+config._argv = argv;
+config._isWatch = isWatch;
+config._isRelease = isRelease;
+config._isDebug = isWatch || argv.d;
+config._components = {};
+
+config.version = argv.v || config.version;
+/**
+ * 是否替换 css 中的图片路径为绝对路径
+ * 线上生产环境路径为 cdn + production + css相对地址
+ * example:
+ * source> /app/components/main/main.scss [reference] i/bg.png
+ * production> {cdn}/main/1.0.0/app/components/main/i/bg.png
+ */
+config.replaceCSSUrl = !isWatch;
+config.production = '/' + config.name + '/' + config.version;
+config.dest = isWatch
+    ? config.server.dir
+    : config.dest + config.production;
+
 
 // Meta tasks
 gulp.task('sprite', sprite(config));
+gulp.task('nunjucks', nunjucks(config));
 gulp.task('uglify', uglify(config));
 gulp.task('copy', copy(config));
-gulp.task('nunjucks', nunjucks(config));
-gulp.task('sass', ['sprite'], sass(config));
+gulp.task('sass', ['sprite', 'copy'], sass(config));
 gulp.task('ftp', ftp(config));
 gulp.task('server', server(config));
 gulp.task('clean', clean(config));
@@ -92,8 +103,7 @@ gulp.task('start', ['nunjucks', 'uglify', 'sass', 'copy', 'server'], start(confi
 
 // Deployment tasks
 gulp.task('build', build(config));
-gulp.task('deploy', ftp(config));
-gulp.task('release', ['uglify', 'sass', 'copy'], function() {
-    // gulp release -t
-    if (argv.t) nunjucks(config)();
+gulp.task('deploy', ['build'], function (cb) {
+    ftp(config)(cb);
 });
+gulp.task('release', ['build'], function() {});

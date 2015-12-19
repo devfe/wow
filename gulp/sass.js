@@ -26,12 +26,11 @@ function replaceUrl(content, file, config) {
                 var dirname = path.dirname(match);
                 var filedir = path.dirname(file);
                 var basename = path.basename(match);
-
                 var production = path.join(
+                    config.cdn,
                     config.production,
-                    config.version,
                     // 找出当前样式文件引用url路径相对于项目路径
-                    path.relative(process.cwd(), path.resolve(filedir, dirname)),
+                    Util.relativeDir(path.resolve(filedir, dirname)),
                     basename
                 );
 
@@ -55,22 +54,24 @@ module.exports = function(config, file) {
     var src = file || config.styles;
 
     return function(cb) {
-        return sass(src, {
+        cb = cb || function() {};
+
+        sass(src, {
                 base: config.source,
-                style: config._isRelease ? 'compressed' : 'compact'
+                style: 'compact'
             })
             .on('error', sass.logError)
-            .pipe(gulpif(config.replaceUrl, modify({
+            .pipe(gulpif(config.replaceCSSUrl, modify({
                 fileModifier: function(file, contents) {
                     return replaceUrl(contents, file.path, config);
                 }
             })))
-            .pipe(gulpif(config._isRelease, wrapper({
+            .pipe(gulpif(!config._isRelease, wrapper({
                 header: function(file) {
                     return Util.getBanner(file, config);
                 }
             })))
-            .pipe(gulpif(config._isRelease, minifyCss()))
+            .pipe(gulpif(!config._isDebug, minifyCss()))
             .pipe(gulp.dest(config.dest))
             .on('end', cb)
             .pipe(gulpif(config._isWatch, livereload()));

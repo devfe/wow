@@ -2,7 +2,6 @@ var path = require('path');
 
 var gulp = require('gulp');
 var data = require('gulp-data');
-var replace = require('gulp-replace');
 var gulpif = require('gulp-if');
 var livereload = require('gulp-livereload');
 var Util = require('./utils');
@@ -80,7 +79,7 @@ function parseComponentTag (config) {
 }
 */
 
-// 预先把组件引用拼成对象数据
+// 解析组件引用拼成对象数据
 function parseReference(config, file) {
     var content = String(file.contents);
     var RE_COMPONENT = /\{\%\scomponent\s([^%]+)\%\}/g;
@@ -122,9 +121,14 @@ function parseReference(config, file) {
 
 }
 
-function addBuiltInFilters(env, config) {
-    // 过滤 components
-    // {{ _components | exclude('main', 'footer') | source('style') }}
+/**
+ * 添加内置过滤器
+ */
+function addFilters(env, config) {
+    /**
+     * 过滤 components
+     *  {{ _components | exclude('main', 'footer') | source('style') }}
+     */
     env.addFilter('exclude', function() {
         var args = Array.prototype.slice.call(arguments);
         var components = args.shift();
@@ -140,42 +144,80 @@ function addBuiltInFilters(env, config) {
         return result;
     });
 
-    // 获取拼合 component 资源文件
+    //
+    /**
+     * 获取拼合 component 资源文件
+     *  {{ _components source('link') }}
+     *  {{ _components source('script') }}
+     */
     env.addFilter('source', function(components, type) {
         var paths = [];
-        var EXT = type === 'style' ? '.scss' : '.js';
+        var EXT = type === 'link' ? '.scss' : '.js';
         var prefix = path.relative(config.source, process.cwd());
-        var tag = type === 'style'
-            ? '<link type="text/css" rel="stylesheet" href="{{ref}}" />'
-            : '<script src="{{ref}}"></script>';
+
+        var tag = Util.getTag(type);
 
         for ( var c in components ) {
             var filename = path.join(config.source, c + EXT);
 
             // 组件资源文件存在并且有内容才会产生引用
-            if ( Util.isExists(filename) ) {
+            if ( Util.hasContents(filename) ) {
                 // html 里面引用相对路径不需要app
                 paths.push(Util.dirToPath(path.join(prefix, c + EXT.replace('.scss', '.css'))));
             }
         }
         var result = paths.map(function(r) {
-            return tag.replace('{{ref}}', r);
+            return tag.replace('{{source}}', r);
         });
         var resultCombo = paths.map(function(r) {
             return path.join(config.view, r);
         });
-        var comboPath = path.join(config.production, config.version,
-            config.source,
+
+        var comboPath = path.join(
+            config.cdn,
+            config.production,
+            '??',
             resultCombo.join(',')
         );
 
         return config._isRelease
-            ? tag.replace('{{ref}}', Util.dirToPath(comboPath))
+            ? tag.replace('{{source}}', Util.dirToPath(comboPath))
             : result.join('\n');
     });
 }
 
-function addBuiltInExtension(env, config) {
+/**
+ * 转换手动引用的资源路径
+ * {{ Tag('tagname', relative_path) }}
+ * return
+ *  <script src"production_path"></script>
+ *  <link rel="stylesheet" type="text/css" href="production_path" />
+ */
+function addGlobals(env, config) {
+    function getProductionPath(source) {
+        var result = source;
+
+        if (config._isRelease) {
+            var realPath       = Util.relativeDir(path.resolve(config.view, source));
+            var productionPath = path.join(
+                config.cdn,
+                config.production,
+                realPath
+            );
+
+            result = Util.dirToPath(productionPath);
+        }
+        return result;
+    }
+    env.addGlobal('Tag', function (tagname, source) {
+        return Util.getTag(tagname).replace('{{source}}', getProductionPath(source));
+    });
+}
+
+/**
+ * 添加自定义标签
+ */
+function addExtensions(env, config) {
     /**
      * {% component 'name' {title: 'Example', subtitle: 'An example component'} %}
      */
@@ -198,8 +240,7 @@ function addBuiltInExtension(env, config) {
 
             return env.render(cPath, _.assign(data, {
                 name: config.name,
-                version: config.version,
-                production: config.production
+                version: config.version
             }));
         };
     };
@@ -211,10 +252,13 @@ module.exports = function(config, file) {
     var src = file || config.views[0];
     var env = nunjucksRender.nunjucks.configure(config.source, {watch: false});
 
-    addBuiltInExtension(env, config);
-    addBuiltInFilters(env, config);
+    addExtensions(env, config);
+    addFilters(env, config);
+    addGlobals(env, config);
 
     return function(cb) {
+        cb = cb || function() {};
+
         gulp.src(src, { base: config.source })
             //.pipe(parseComponentTag(config))
             .pipe(data(function (file) {
@@ -224,15 +268,13 @@ module.exports = function(config, file) {
                 return {
                     name: config.name,
                     version: config.version,
-                    production: config.production,
                     _components: config._components[file.path]
                 };
             }))
             .pipe(nunjucksRender())
             .pipe(gulp.dest(config.dest))
+            .on('end', cb)
             .pipe(gulpif(config._isWatch, livereload()));
-
-        cb();
     }
 };
 

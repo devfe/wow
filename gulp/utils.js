@@ -2,9 +2,17 @@ var fs = require('fs');
 var path = require('path');
 
 module.exports = {
-    isExists: function(file) {
-        return fs.existsSync(file) && fs.readFileSync(file, 'utf8') !== '';
+    // file
+    hasContents: function (file) {
+        return this.exists(file) && fs.readFileSync(file, 'utf8') !== '';
     },
+    exists: function(file) {
+        return fs.existsSync(file);
+    },
+    isDir: function (file) {
+        return fs.lstatSync(file).isDirectory();
+    },
+    // dir,url
     relativeDir: function (dir) {
         return path.relative(process.cwd(), dir);
     },
@@ -17,6 +25,17 @@ module.exports = {
     },
     isDataUri: function (url) {
         return /^data:image/.test(url);
+    },
+    // tag template
+    getTag: function (tagname) {
+        switch (tagname) {
+            case 'link':
+                return '<link type="text/css" rel="stylesheet" href="{{source}}" />';
+            case 'script':
+                return '<script src="{{source}}"></script>';
+            default:
+                return '<'+ tagname +'></'+ tagname +'>'
+        }
     },
     getBanner: function (file, config) {
         var filename = path.basename(file.path);

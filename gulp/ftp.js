@@ -4,8 +4,7 @@ var ftp = require( 'vinyl-ftp' );
 
 var _ = require('lodash');
 
-module.exports = function (config, file) {
-    var src = file || config.images;
+module.exports = function (config) {
     var ftpConfig = _.assign(config.deploy, {
         log: function (type, file) {
             if (/UP/.test(type)) {
@@ -15,12 +14,15 @@ module.exports = function (config, file) {
     });
     var conn = ftp.create(ftpConfig);
 
-    return function() {
-        return gulp.src(ftpConfig.src, {
+    return function(cb) {
+        cb = cb || function() {};
+
+        gulp.src(ftpConfig.src, {
                 base: config.dest,
                 buffer: false
             })
             .pipe( conn.newer(ftpConfig.dest) )
-            .pipe( conn.dest(ftpConfig.dest) );
+            .pipe( conn.dest(ftpConfig.dest) )
+            .on('end', cb);
     }
 };

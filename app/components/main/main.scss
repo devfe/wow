@@ -24,3 +24,9 @@ ul {
     }
     @include sprites($spritesheet-sprites);
 }
+h1 s {
+    display:inline-block;
+    background:url(../footer/i/npm.png) 0 0 no-repeat;
+    width: 25px;
+    height: 25px;
+}

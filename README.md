@@ -12,7 +12,7 @@ Wow - Ultimate component based gulp workflow
 
 Install npm packages & Just run gulp command:
 
-    $ npm install
+    $ npm install && npm install -g gulp
     $ gulp start
 
 then go browser open `http://localhost:1024` to enjoy.
@@ -29,29 +29,64 @@ then go browser open `http://localhost:1024` to enjoy.
 3. Built-in boilerplate
 4. Easy to configuration
 
-## CLI
+## CLI(command)
 
 ### $ gulp start
 
 Start a local server with livereload
 
-### $ gulp build [-t] [-f path/to/file] [-v=0.0.0]
+### $ gulp build
 
-Build source to dest
+Build source to destination
 
-### $ gulp deploy 
+### $ gulp deploy
 
 Upload **build** file to remote ftp server
 
 ### $ gulp release [-t] [-f path/to/file]
 
-Release project to dest, if `-t` both with template file
+Release project to git repo
+
+## CLI(option)
+
+### -f
+
+Specify a single file to processed
+
+    $ gulp build -f app/components/main/main.js
+
+### -d
+
+Debug mode will not compress source file
+
+### -t
+
+Processing contain template html files
+
+### -v
+
+Specify a version to processed
+
+    $ gulp build -v 1.1.1
+    
+    // Directory result
+    -build
+    └─main
+        └─[1.1.1]
+            └─components
+                ├─footer
+                ├─main
+                │  ├─i
+                │  └─mixin
+                ├─module
+                └─sidebar
+                
 
 ### Todos
 
-- [ ] add git workflow
-- [ ] deploy single file
-- [ ] deploy specified verson of source code
+- [x] deploy single file
+- [x] deploy specified version of source code
+- [ ] add git workflow to release command
 
 
 > Read the gulpfile is best way to know how it works.
