@@ -81,6 +81,9 @@ Specify a version to processed
                 ├─module
                 └─sidebar
                 
+### -c
+
+Start with component template, this is useful for separated component development
 
 ### Todos
 

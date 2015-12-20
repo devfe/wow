@@ -1,11 +1,12 @@
-var path = require('path');
 var gulp = require('gulp');
 
 var livereload = require('gulp-livereload');
+var path = require('path');
 
 // tasks
 var uglify = require('./uglify');
 var nunjucks = require('./nunjucks');
+var component = require('./component');
 var sass = require('./sass');
 var Util = require('./utils');
 
@@ -20,6 +21,18 @@ function watchRunTask(src, cb) {
 module.exports = function (config) {
     return function() {
         livereload.listen({ basePath: config.server.dir });
+
+        if (config._argv.c) {
+            component(config)();
+            watchRunTask(config.components, function (file) {
+                var dirname = path.dirname(file.path);
+                var basename = path.basename(dirname);
+                var template = path.join(dirname, basename + '.html');
+
+                component(config, template)();
+            });
+        }
+
         watchRunTask(config.views[0], function (file) {
             nunjucks(config, file.path)();
         });

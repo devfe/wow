@@ -1,16 +1,17 @@
 var gulp     = require('gulp');
 
 // tasks
-var copy     = require('./gulp/copy');
-var sprite   = require('./gulp/sprite');
-var uglify   = require('./gulp/uglify');
-var nunjucks = require('./gulp/nunjucks');
-var sass     = require('./gulp/sass');
-var server   = require('./gulp/server');
-var ftp      = require('./gulp/ftp');
-var build    = require('./gulp/build');
-var clean    = require('./gulp/clean');
-var start    = require('./gulp/start');
+var copy      = require('./gulp/copy');
+var sprite    = require('./gulp/sprite');
+var uglify    = require('./gulp/uglify');
+var nunjucks  = require('./gulp/nunjucks');
+var sass      = require('./gulp/sass');
+var server    = require('./gulp/server');
+var ftp       = require('./gulp/ftp');
+var component = require('./gulp/component');
+var build     = require('./gulp/build');
+var clean     = require('./gulp/clean');
+var start     = require('./gulp/start');
 
 // Args
 var argv     = require('minimist')(process.argv.slice(2));
@@ -38,7 +39,8 @@ var config = {
     // 匹配待目标文件
     views: ['app/views/*.html', 'app/{views,components}/*/*.html'],
     styles: ['app/components/**/*.scss'],
-    scripts: ['app/components/**/*.js'],
+    scripts: ['app/components/**/*.js', '!**/config.js'],
+    components: ['app/components/*/*'],
     images: ['./app/components/**/*.+(jpg|png|gif)', '!sprite-*.+(jpg|png|gif)'],
     tests: ['./app/tests/**/*'],
 
@@ -93,6 +95,7 @@ config.dest = isWatch
 // Meta tasks
 gulp.task('sprite', sprite(config));
 gulp.task('nunjucks', nunjucks(config));
+gulp.task('component', component(config));
 gulp.task('uglify', uglify(config));
 gulp.task('copy', copy(config));
 gulp.task('sass', ['sprite', 'copy'], sass(config));

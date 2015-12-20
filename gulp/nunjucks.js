@@ -5,6 +5,7 @@ var data = require('gulp-data');
 var gulpif = require('gulp-if');
 var livereload = require('gulp-livereload');
 var Util = require('./utils');
+var Helper = require('./helper');
 var _ = require('lodash');
 
 var nunjucks = require('gulp.nunjucks');
@@ -117,131 +118,6 @@ function parseReference(config, file) {
     });
 }
 
-/**
- * 添加内置过滤器
- */
-function addFilters(env, config) {
-    /**
-     * exclude 过滤器
-     *  {{ _components | exclude('main', 'footer') | source('style') }}
-     */
-    env.addFilter('exclude', function() {
-        var args = Array.prototype.slice.call(arguments);
-        var components = args.shift();
-        var result = {};
-
-        for ( var c in components ) {
-            //console.log('--%s-%s--', args, components[c]['name']);
-            if ( args.indexOf( components[c]['name'] ) < 0 ) {
-                result[c] = components[c];
-            }
-        }
-
-        return result;
-    });
-
-    //
-    /**
-     * 获取拼合 component 资源文件
-     *  {{ _components source('link') }}
-     *  {{ _components source('script') }}
-     */
-    env.addFilter('source', function(components, type) {
-        var paths = [];
-        var EXT = type === 'link' ? '.scss' : '.js';
-        var prefix = path.relative(config.source, process.cwd());
-
-        var tag = Util.getTag(type);
-
-        for ( var c in components ) {
-            var filename = path.join(config.source, c + EXT);
-
-            // 组件资源文件存在并且有内容才会产生引用
-            if ( Util.hasContents(filename) ) {
-                // html 里面引用相对路径不需要app
-                paths.push(Util.dirToPath(path.join(prefix, c + EXT.replace('.scss', '.css'))));
-            }
-        }
-        var result = paths.map(function(r) {
-            return tag.replace('{{source}}', r);
-        });
-        var resultCombo = paths.map(function(r) {
-            return path.join(config.view, r);
-        });
-
-        var comboPath = path.join(
-            config.cdn,
-            config.production,
-            '??',
-            resultCombo.join(',')
-        );
-
-        return config._isRelease
-            ? tag.replace('{{source}}', Util.dirToPath(comboPath))
-            : result.join('\n');
-    });
-}
-
-/**
- * 转换手动引用的资源路径
- * {{ Tag('tagname', relative_path) }}
- * return
- *  <script src"production_path"></script>
- *  <link rel="stylesheet" type="text/css" href="production_path" />
- */
-function addGlobals(env, config) {
-    function getProductionPath(source) {
-        var result = source;
-
-        if (config._isRelease) {
-            var realPath       = Util.relativeDir(path.resolve(config.view, source));
-            var productionPath = path.join(
-                config.cdn,
-                config.production,
-                realPath
-            );
-
-            result = Util.dirToPath(productionPath);
-        }
-        return result;
-    }
-    env.addGlobal('Tag', function (tagname, source) {
-        return Util.getTag(tagname).replace('{{source}}', getProductionPath(source));
-    });
-}
-
-/**
- * 添加自定义标签
- */
-function addExtensions(env, config) {
-    /**
-     * {% component 'name' {title: 'Example', subtitle: 'An example component'} %}
-     */
-    var ComponentTag = function() {
-        this.tags = ['component'];
-
-        this.parse = function(parser, nodes, lexer) {
-            var token = parser.nextToken();
-
-            var args = parser.parseSignature(null, true);
-            parser.advanceAfterBlockEnd(token.value);
-
-            return new nodes.CallExtension(this, 'run', args);
-        };
-
-        this.run = function(context, name, data) {
-            var cPath = config.componentFile
-                .replace(/{name}/g, name);
-
-            return env.render(cPath, _.assign(data, {
-                name: config.name,
-                version: config.version
-            }));
-        };
-    };
-
-    env.addExtension('component', new ComponentTag());
-}
 
 module.exports = function(config, file) {
     var src = file || config.views[0];
@@ -251,9 +127,9 @@ module.exports = function(config, file) {
         lstripBlocks: true
     });
 
-    addExtensions(env, config);
-    addFilters(env, config);
-    addGlobals(env, config);
+    Helper.addExtensions(env, config);
+    Helper.addFilters(env, config);
+    Helper.addGlobals(env, config);
 
     return function(cb) {
         cb = cb || function() {};

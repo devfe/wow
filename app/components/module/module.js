@@ -3,3 +3,4 @@
 
     d.innerHTML += '<strong>Reference -> from component script.</strong>';
 })();
+
