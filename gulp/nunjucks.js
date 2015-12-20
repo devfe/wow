@@ -1,5 +1,4 @@
 var path = require('path');
-var fs = require('fs');
 
 var gulp = require('gulp');
 var data = require('gulp-data');
@@ -8,7 +7,7 @@ var livereload = require('gulp-livereload');
 var Util = require('./utils');
 var _ = require('lodash');
 
-var nunjucksRender = require('gulp-nunjucks-render');
+var nunjucks = require('gulp.nunjucks');
 
 /*
 function getTplVal(data) {
@@ -246,7 +245,11 @@ function addExtensions(env, config) {
 
 module.exports = function(config, file) {
     var src = file || config.views[0];
-    var env = nunjucksRender.nunjucks.configure(config.source, {watch: false});
+    var env = nunjucks.configure(config.source, {
+        autoescape: false,
+        trimBlocks: true,
+        lstripBlocks: true
+    });
 
     addExtensions(env, config);
     addFilters(env, config);
@@ -267,7 +270,7 @@ module.exports = function(config, file) {
                     _components: config._components[file.path]
                 };
             }))
-            .pipe(nunjucksRender())
+            .pipe(nunjucks())
             .pipe(gulp.dest(config.dest))
             .on('end', cb)
             .pipe(gulpif(config._isWatch, livereload()));
