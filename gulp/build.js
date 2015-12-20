@@ -8,7 +8,7 @@ var nunjucks = require('./nunjucks');
 
 var async = require('async');
 
-var Util   = require('./utils');
+var Util  = require('./utils');
 
 function buildAll(config, cb) {
     var fn = [

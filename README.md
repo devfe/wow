@@ -4,7 +4,7 @@ Wow - Ultimate component based gulp workflow
 
 ## Requirements
 
-* node > [v1.0.35](http://npm.taobao.org/mirrors/node/v0.10.35/)
+* node > [v0.10.35](http://npm.taobao.org/mirrors/node/v0.10.35/)
 * ruby 2.0.0 + sass 3.4.13
 * gulp 3.9.0
 
