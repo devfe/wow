@@ -1,7 +1,6 @@
 .sass-cache
 node_modules
 build
-test/
 proj
 www/
 _sprite.*
