@@ -3,7 +3,7 @@ var gulpif = require('gulp-if');
 var livereload = require('gulp-livereload');
 
 module.exports = function (config, file) {
-    var src = file || config.images;
+    var src = file || config.tests.concat(config.images);
 
     return function(cb) {
         cb = cb || function() {};

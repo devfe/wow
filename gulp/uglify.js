@@ -8,7 +8,7 @@ var livereload = require('gulp-livereload');
 var Util = require('./utils');
 
 module.exports = function(config, file) {
-    var src = file || config.tests.concat(config.scripts);
+    var src = file || config.scripts;
     return function (cb) {
         cb = cb || function() {};
 
