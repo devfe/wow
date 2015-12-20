@@ -8,13 +8,13 @@ var livereload = require('gulp-livereload');
 var Util = require('./utils');
 
 module.exports = function(config, file) {
-    var src = file || config.scripts;
+    var src = file || config.tests.concat(config.scripts);
     return function (cb) {
         cb = cb || function() {};
 
         gulp.src(src, { base: config.source })
-            .pipe(eslint())
-            .pipe(eslint.format())
+            .pipe(gulpif(!config._isWatch, eslint()))
+            .pipe(gulpif(!config._isWatch, eslint.format()))
             .pipe(gulpif(!config._isWatch, uglify()))
             .pipe(gulpif(config._isRelease, wrapper({
                 header: function(file) {

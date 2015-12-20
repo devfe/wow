@@ -1,4 +1,5 @@
 var path = require('path');
+var fs = require('fs');
 
 var gulp = require('gulp');
 var data = require('gulp-data');
@@ -8,8 +9,6 @@ var Util = require('./utils');
 var _ = require('lodash');
 
 var nunjucksRender = require('gulp-nunjucks-render');
-
-var ComponentPath = '{cDir}/{name}/{name}.html';
 
 /*
 function getTplVal(data) {
@@ -79,7 +78,15 @@ function parseComponentTag (config) {
 }
 */
 
-// 解析组件引用拼成对象数据
+/**
+ * 解析组件引用拼成对象数据
+ *   _components: {
+ *      "path/to/template/file": {
+ *          "path/to/component0": { name: 'c2', path: ""},
+ *          "path/to/component1": { name: 'c1', path: ""}
+ *      }
+ *   }
+ */ 
 function parseReference(config, file) {
     var content = String(file.contents);
     var RE_COMPONENT = /\{\%\scomponent\s([^%]+)\%\}/g;
@@ -93,21 +100,12 @@ function parseReference(config, file) {
             .replace(/'/g, '')
             .replace(/"/g, '').trim();
     }
-    /*
-    _components:
-     {
-        "path/to/template/file": {
-            "path/to/component0": { name: 'c2', path: ""},
-            "path/to/component1": { name: 'c1', path: ""}
-        }
-     }
-    */
+
     config._components[file.path] = {};
 
     results.forEach(function (r) {
         var name = getName(r.split(',')[0]);
-        var cPath = ComponentPath
-            .replace('{cDir}', config.component)
+        var cPath = config.componentFile
             .replace(/{name}/g, name)
             .replace(/\.html/g, '');
 
@@ -118,7 +116,6 @@ function parseReference(config, file) {
             };
         }
     });
-
 }
 
 /**
@@ -126,7 +123,7 @@ function parseReference(config, file) {
  */
 function addFilters(env, config) {
     /**
-     * 过滤 components
+     * exclude 过滤器
      *  {{ _components | exclude('main', 'footer') | source('style') }}
      */
     env.addFilter('exclude', function() {
@@ -234,8 +231,7 @@ function addExtensions(env, config) {
         };
 
         this.run = function(context, name, data) {
-            var cPath = ComponentPath
-                .replace('{cDir}', config.component)
+            var cPath = config.componentFile
                 .replace(/{name}/g, name);
 
             return env.render(cPath, _.assign(data, {

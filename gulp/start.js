@@ -7,15 +7,12 @@ var livereload = require('gulp-livereload');
 var uglify = require('./uglify');
 var nunjucks = require('./nunjucks');
 var sass = require('./sass');
-
-function getRelativePath(dir) {
-    return path.relative(process.cwd(), dir);
-}
+var Util = require('./utils');
 
 function watchRunTask(src, cb) {
     gulp.watch(src)
         .on('change', function(file) {
-            console.log('File changed =>' + getRelativePath(file.path));
+            console.log('File changed =>' + Util.relativeDir(file.path));
             cb(file);
         });
 }

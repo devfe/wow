@@ -4,7 +4,11 @@ var path = require('path');
 module.exports = {
     // file
     hasContents: function (file) {
-        return this.exists(file) && fs.readFileSync(file, 'utf8') !== '';
+        if (this.exists(file)) {
+            return fs.readFileSync(file, 'utf8') !== '';
+        } else {
+            return false;
+        }
     },
     exists: function(file) {
         return fs.existsSync(file);

@@ -32,13 +32,15 @@ var config = {
     dest: 'build',
     clean: ['www', 'build'],
     component: 'components',
+    componentFile: 'components/{name}/{name}.html',
     view: 'views',
 
     // 匹配待目标文件
     views: ['app/views/*.html', 'app/{views,components}/*/*.html'],
-    styles: ['app/**/*.scss'],
-    scripts: ['app/**/*.js'],
+    styles: ['app/components/**/*.scss'],
+    scripts: ['app/components/**/*.js'],
     images: ['./app/components/**/*.+(jpg|png|gif)', '!sprite-*.+(jpg|png|gif)'],
+    tests: ['./app/tests/**/*'],
 
     sprite: {
         src: ['./app/components/**/sprite-*.+(jpg|png|gif)'],
