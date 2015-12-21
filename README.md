@@ -1,5 +1,7 @@
 # Wow
 
+[![Build Status](https://travis-ci.org/devfe/wow.svg?branch=master)](https://travis-ci.org/devfe/wow)
+
 Wow - Ultimate component based gulp workflow
 
 ## Requirements
