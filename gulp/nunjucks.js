@@ -1,12 +1,10 @@
-var path = require('path');
-
-var gulp = require('gulp');
-var data = require('gulp-data');
-var gulpif = require('gulp-if');
+var gulp       = require('gulp');
+var data       = require('gulp-data');
+var gulpif     = require('gulp-if');
 var livereload = require('gulp-livereload');
-var Util = require('./utils');
-var Helper = require('./helper');
-var _ = require('lodash');
+
+var Util       = require('./utils');
+var Helper     = require('./helper');
 
 var nunjucks = require('gulp.nunjucks');
 
@@ -105,7 +103,7 @@ function parseReference(config, file) {
 
     results.forEach(function (r) {
         var name = getName(r.split(',')[0]);
-        var cPath = config.componentFile
+        var cPath = config.component.refPath
             .replace(/{name}/g, name)
             .replace(/\.html/g, '');
 
@@ -117,7 +115,6 @@ function parseReference(config, file) {
         }
     });
 }
-
 
 module.exports = function(config, file) {
     var src = file || config.views[0];

@@ -1,13 +1,14 @@
-var gulp = require('gulp');
-
-var livereload = require('gulp-livereload');
 var path = require('path');
 
+var gulp       = require('gulp');
+var livereload = require('gulp-livereload');
+
 // tasks
-var uglify = require('./uglify');
-var nunjucks = require('./nunjucks');
+var uglify    = require('./uglify');
+var nunjucks  = require('./nunjucks');
 var component = require('./component');
-var sass = require('./sass');
+var sass      = require('./sass');
+
 var Util = require('./utils');
 
 function watchRunTask(src, cb) {

@@ -1,18 +1,19 @@
 var path = require('path');
 var gulp = require('gulp');
 
-var data = require('gulp-data');
-var gulpif = require('gulp-if');
+var data       = require('gulp-data');
+var gulpif     = require('gulp-if');
 var livereload = require('gulp-livereload');
-var nunjucks = require('gulp.nunjucks');
-var modify = require('gulp-modify');
-var Util = require('./utils');
-var Helper = require('./helper');
-var _ = require('lodash');
+var nunjucks   = require('gulp.nunjucks');
+var modify     = require('gulp-modify');
 
-function addData(file) {
+var Util       = require('./utils');
+var Helper     = require('./helper');
+var _          = require('lodash');
+
+function addData(file, config) {
     var dirname = path.dirname(file.path);
-    var cfgPath = path.join(dirname, 'config.js');
+    var cfgPath = path.join(dirname, config.component.config);
     var config = {};
 
     if (Util.hasContents(cfgPath)) {
@@ -66,7 +67,7 @@ module.exports = function (config, file) {
 
         gulp.src(src, { base: config.source })
             .pipe(data(function (file) {
-                return addData(file);
+                return addData(file, config);
             }))
             .pipe(modify({
                 fileModifier: addLayout

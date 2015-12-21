@@ -1,54 +1,13 @@
-var path = require('path');
-var gulp = require('gulp');
-var sass = require('gulp-ruby-sass');
-var minifyCss = require('gulp-minify-css');
-var modify = require('gulp-modify');
-var wrapper = require('gulp-wrapper');
-var gulpif = require('gulp-if');
+var gulp       = require('gulp');
+var sass       = require('gulp-ruby-sass');
+var minifyCss  = require('gulp-minify-css');
+var modify     = require('gulp-modify');
+var wrapper    = require('gulp-wrapper');
+var gulpif     = require('gulp-if');
 var livereload = require('gulp-livereload');
-var Util = require('./utils');
 
-var _ = require('lodash');
-
-function replaceUrl(content, file, config) {
-    // 匹配所有的 url(...)
-    var re = /url\s*\(\s*(['"]?)([^"'\)]*)\1\s*\)/gi;
-    var matches = content.match(re);
-    var urls = [];
-
-    if ( matches && matches.length ) {
-        // 去掉重复引用的url
-        _.uniq(matches).forEach(function (match) {
-            // 去掉多余字符如：url(,),",'
-            match = match.replace(/url\(|\)|"|'/g, '');
-
-            if ( !Util.isAbsUrl(match) && !Util.isDataUri(match) ) {
-                var dirname = path.dirname(match);
-                var filedir = path.dirname(file);
-                var basename = path.basename(match);
-                var production = path.join(
-                    config.cdn,
-                    config.production,
-                    // 找出当前样式文件引用url路径相对于项目路径
-                    Util.relativeDir(path.resolve(filedir, dirname)),
-                    basename
-                );
-
-                urls.push({
-                    path: match,
-                    production: Util.dirToPath(production)
-                });
-            }
-        });
-
-        urls.forEach(function (url) {
-            var urlRE = new RegExp(url.path, 'gi');
-            content = content.replace(urlRE, url.production);
-        });
-    }
-
-    return content;
-}
+var Util   = require('./utils');
+var Helper = require('./helper');
 
 module.exports = function(config, file) {
     var src = file || config.styles;
@@ -62,8 +21,9 @@ module.exports = function(config, file) {
             })
             .on('error', sass.logError)
             .pipe(gulpif(config.replaceCSSUrl, modify({
-                fileModifier: function(file, contents) {
-                    return replaceUrl(contents, file.path, config);
+                fileModifier: function(file) {
+                    return Helper.replaceUrl(file, config.source,
+                        config.domain + config.production);
                 }
             })))
             .pipe(gulpif(!config._isRelease, wrapper({

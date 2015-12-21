@@ -1,10 +1,11 @@
 var gulp = require('gulp');
 
-var uglify = require('gulp-uglify');
-var eslint = require('gulp-eslint');
-var gulpif = require('gulp-if');
-var wrapper = require('gulp-wrapper');
+var uglify     = require('gulp-uglify');
+var eslint     = require('gulp-eslint');
+var gulpif     = require('gulp-if');
+var wrapper    = require('gulp-wrapper');
 var livereload = require('gulp-livereload');
+
 var Util = require('./utils');
 
 module.exports = function(config, file) {

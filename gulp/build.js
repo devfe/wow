@@ -1,13 +1,12 @@
-var path = require('path');
-var copy   = require('./copy');
-var uglify = require('./uglify');
-var sass   = require('./sass');
-var clean  = require('./clean');
-var ftp    = require('./ftp');
+var path     = require('path');
+var copy     = require('./copy');
+var uglify   = require('./uglify');
+var sass     = require('./sass');
+var clean    = require('./clean');
+var ftp      = require('./ftp');
 var nunjucks = require('./nunjucks');
 
 var async = require('async');
-
 var Util  = require('./utils');
 
 function buildAll(config, cb) {
@@ -21,9 +20,7 @@ function buildAll(config, cb) {
         fn.push(nunjucks(config));
     }
     async.series(fn, function (err, result) {
-        if (err) {
-            console.log(err);
-        }
+        if (err) { console.log(err); }
         cb();
     });
 }
@@ -54,9 +51,7 @@ function buildSingle(config, singleFile, cb) {
     }
 
     async.series(fn, function (err, result) {
-        if (err) {
-            console.log(err);
-        }
+        if (err) { console.log(err); }
         cb();
     });
 }

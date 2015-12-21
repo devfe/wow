@@ -1,5 +1,5 @@
 var path = require('path');
-var _ = require('lodash');
+var _    = require('lodash');
 var Util = require('./utils');
 
 module.exports = {
@@ -55,7 +55,7 @@ module.exports = {
             });
 
             var comboPath = path.join(
-                config.cdn,
+                config.domain,
                 config.production,
                 '??',
                 resultCombo.join(',')
@@ -77,21 +77,24 @@ module.exports = {
     addGlobals: function(env, config) {
         function getProductionPath(source) {
             var result = source;
+            var realPath = path.resolve(config.view, source);
+            var relativePath = Util.relativeDir(realPath);
 
             if (config._isRelease) {
-                var realPath       = Util.relativeDir(path.resolve(config.view, source));
                 var productionPath = path.join(
-                    config.cdn,
+                    config.domain,
                     config.production,
-                    realPath
+                    relativePath
                 );
 
                 result = Util.dirToPath(productionPath);
             }
+
             return result;
         }
         env.addGlobal('Tag', function (tagname, source) {
-            return Util.getTag(tagname).replace('{{source}}', getProductionPath(source));
+            return Util.getTag(tagname)
+                .replace('{{source}}', getProductionPath(source));
         });
     },
 
@@ -116,7 +119,7 @@ module.exports = {
             };
 
             this.run = function(context, name, data) {
-                var cPath = config.componentFile
+                var cPath = config.component.refPath
                     .replace(/{name}/g, name);
 
                 var mergedData = _.assign(_this.getComponentData(cPath, config), data, {
@@ -134,7 +137,8 @@ module.exports = {
      * 获取组件数据
      */
     getComponentData: function (cName, config) {
-        var cfgPath = path.join(process.cwd(), config.source, path.dirname(cName), 'config.js');
+        var cfgPath = path.join(process.cwd(), config.source,
+            path.dirname(cName), config.component.config);
         var data = {};
 
         if (Util.hasContents(cfgPath)) {
@@ -143,5 +147,51 @@ module.exports = {
         // clear node module cache.
         delete require.cache[cfgPath];
         return data;
+    },
+
+    /**
+     * 替换 css 中的 url(...) 为绝对路径
+     */
+    replaceUrl: function(file, cwd, prefix) {
+        // 匹配所有的 url(...)
+        var content = file.contents.toString();
+        var re = /url\s*\(\s*(['"]?)([^"'\)]*)\1\s*\)/gi;
+        var matches = content.match(re);
+        var urls = [];
+
+        if ( matches && matches.length ) {
+            // 去掉重复引用的url
+            _.uniq(matches).forEach(function (match) {
+                // 去掉多余字符如：url(,),",'
+                match = match.replace(/url\(|\)|"|'/g, '');
+
+                if ( !Util.isAbsUrl(match) && !Util.isDataUri(match) ) {
+                    var dirname = path.dirname(match);
+                    var filedir = path.dirname(file.path);
+                    var basename = path.basename(match);
+                    var production = path.join(
+                        prefix,
+                        // 找出当前样式文件引用url路径相对于项目路径
+                        path.relative(
+                            path.join(process.cwd(), cwd),
+                            path.resolve(filedir, dirname)
+                        ),
+                        basename
+                    );
+
+                    urls.push({
+                        path: match,
+                        production: Util.dirToPath(production)
+                    });
+                }
+            });
+
+            urls.forEach(function (url) {
+                var urlRE = new RegExp(url.path, 'gi');
+                content = content.replace(urlRE, url.production);
+            });
+        }
+
+        return content;
     }
 };
