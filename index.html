@@ -1,0 +1,179 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Wow by devfe</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-dark.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <header>
+        <h1>Wow</h1>
+        <p></p>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+
+        <a href="https://github.com/devfe/wow" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/devfe/wow/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/devfe/wow/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
+      <section>
+        <h1>
+<a id="wow" class="anchor" href="#wow" aria-hidden="true"><span class="octicon octicon-link"></span></a>Wow</h1>
+
+<p><a href="https://travis-ci.org/devfe/wow"><img src="https://travis-ci.org/devfe/wow.svg?branch=master" alt="Build Status"></a></p>
+
+<p>Wow - Ultimate component based gulp workflow</p>
+
+<h2>
+<a id="requirements" class="anchor" href="#requirements" aria-hidden="true"><span class="octicon octicon-link"></span></a>Requirements</h2>
+
+<ul>
+<li>node &gt; <a href="http://npm.taobao.org/mirrors/node/v0.10.35/">v0.10.35</a>
+</li>
+<li>ruby 2.0.0 + sass 3.4.13</li>
+<li>gulp 3.9.0</li>
+</ul>
+
+<h2>
+<a id="start" class="anchor" href="#start" aria-hidden="true"><span class="octicon octicon-link"></span></a>Start</h2>
+
+<p>Install npm packages &amp; Just run gulp command:</p>
+
+<pre><code>$ npm install &amp;&amp; npm install -g gulp
+$ gulp start
+</code></pre>
+
+<p>then go browser open <code>http://localhost:1024</code> to enjoy.</p>
+
+<h2>
+<a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h2>
+
+<ol>
+<li>Component based - just try demo</li>
+<li>Buid with gulp and these plugins(thanks):
+
+<ol>
+<li>uglify</li>
+<li>sass</li>
+<li>nunjucks</li>
+<li>eslint</li>
+<li>livereload</li>
+</ol>
+</li>
+<li>Built-in boilerplate</li>
+<li>Easy to configuration</li>
+</ol>
+
+<h2>
+<a id="clicommand" class="anchor" href="#clicommand" aria-hidden="true"><span class="octicon octicon-link"></span></a>CLI(command)</h2>
+
+<h3>
+<a id="-gulp-start" class="anchor" href="#-gulp-start" aria-hidden="true"><span class="octicon octicon-link"></span></a>$ gulp start</h3>
+
+<p>Start a local server with livereload</p>
+
+<h3>
+<a id="-gulp-build" class="anchor" href="#-gulp-build" aria-hidden="true"><span class="octicon octicon-link"></span></a>$ gulp build</h3>
+
+<p>Build source to destination</p>
+
+<h3>
+<a id="-gulp-deploy" class="anchor" href="#-gulp-deploy" aria-hidden="true"><span class="octicon octicon-link"></span></a>$ gulp deploy</h3>
+
+<p>Upload <strong>build</strong> file to remote ftp server</p>
+
+<h3>
+<a id="-gulp-release--t--f-pathtofile" class="anchor" href="#-gulp-release--t--f-pathtofile" aria-hidden="true"><span class="octicon octicon-link"></span></a>$ gulp release [-t] [-f path/to/file]</h3>
+
+<p>Release project to git repo</p>
+
+<h2>
+<a id="clioption" class="anchor" href="#clioption" aria-hidden="true"><span class="octicon octicon-link"></span></a>CLI(option)</h2>
+
+<h3>
+<a id="-f" class="anchor" href="#-f" aria-hidden="true"><span class="octicon octicon-link"></span></a>-f</h3>
+
+<p>Specify a single file to processed</p>
+
+<pre><code>$ gulp build -f app/components/main/main.js
+</code></pre>
+
+<h3>
+<a id="-d" class="anchor" href="#-d" aria-hidden="true"><span class="octicon octicon-link"></span></a>-d</h3>
+
+<p>Debug mode will not compress source file</p>
+
+<h3>
+<a id="-t" class="anchor" href="#-t" aria-hidden="true"><span class="octicon octicon-link"></span></a>-t</h3>
+
+<p>Processing contain template html files</p>
+
+<h3>
+<a id="-v" class="anchor" href="#-v" aria-hidden="true"><span class="octicon octicon-link"></span></a>-v</h3>
+
+<p>Specify a version to processed</p>
+
+<pre><code>$ gulp build -v 1.1.1
+
+// Directory result
+-build
+└─main
+    └─[1.1.1]
+        └─components
+            ├─footer
+            ├─main
+            │  ├─i
+            │  └─mixin
+            ├─module
+            └─sidebar
+</code></pre>
+
+<h3>
+<a id="-c" class="anchor" href="#-c" aria-hidden="true"><span class="octicon octicon-link"></span></a>-c</h3>
+
+<p>Start with component template, this is useful for separated component development</p>
+
+<h3>
+<a id="todos" class="anchor" href="#todos" aria-hidden="true"><span class="octicon octicon-link"></span></a>Todos</h3>
+
+<ul>
+<li>[x] deploy single file</li>
+<li>[x] deploy specified version of source code</li>
+<li>[ ] add git workflow to release command</li>
+</ul>
+
+<blockquote>
+<p>Read the gulpfile is best way to know how it works.</p>
+</blockquote>
+      </section>
+      <footer>
+        <p>Project maintained by <a href="https://github.com/devfe">devfe</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
