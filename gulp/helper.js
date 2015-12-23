@@ -193,5 +193,16 @@ module.exports = {
         }
 
         return content;
+    },
+
+    /**
+     * 通过文件绝对路径获取文件信息
+     * getFileInfo
+     */
+    getFileInfo: function (absPath) {
+        return {
+            filename: Util.dirToPath(path.basename(absPath)),
+            dir: Util.dirToPath(path.dirname(absPath))
+        }
     }
 };
