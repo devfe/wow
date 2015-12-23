@@ -1,8 +1,6 @@
 var fs   = require('fs');
 var path = require('path');
 
-var _      = require('lodash');
-_.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
 
 module.exports = {
     // file
@@ -44,7 +42,7 @@ module.exports = {
                 return '<'+ tagname +'></'+ tagname +'>'
         }
     },
-    getBanner: function (tpl, data) {
+    getTimeStr: function (tpl, data) {
         var now = new Date();
         var dateString = 'YY-DD-MM h:m:s'.replace('YY', now.getFullYear())
             .replace('DD', now.getDate())
@@ -53,10 +51,6 @@ module.exports = {
             .replace('m', now.getMinutes())
             .replace('s', now.getSeconds());
 
-        var compiled = _.template(tpl);
-
-        return compiled(_.assign({
-            date: dateString
-        }, data));
+        return dateString;
     }
 };

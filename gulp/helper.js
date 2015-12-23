@@ -201,7 +201,7 @@ module.exports = {
      */
     getFileInfo: function (absPath) {
         return {
-            name: Util.dirToPath(path.basename(absPath)),
+            filename: Util.dirToPath(path.basename(absPath)),
             dir: Util.dirToPath(path.dirname(absPath))
         }
     }

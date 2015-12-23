@@ -2,11 +2,13 @@ var gulp = require('gulp');
 
 var uglify     = require('gulp-uglify');
 var eslint     = require('gulp-eslint');
+var data       = require('gulp-data');
+var header     = require('gulp.header');
 var gulpif     = require('gulp-if');
-var wrapper    = require('gulp-wrapper');
 var livereload = require('gulp-livereload');
 
-var Util = require('./utils');
+var Util   = require('./utils');
+var Helper = require('./helper');
 
 module.exports = function(config, file) {
     var src = file || config.scripts;
@@ -14,13 +16,14 @@ module.exports = function(config, file) {
         cb = cb || function() {};
 
         gulp.src(src, { base: config.source })
+            .pipe(data(function (file) {
+                return Helper.getFileInfo(file.path);
+            }))
             .pipe(gulpif(!config._isWatch, eslint()))
             .pipe(gulpif(!config._isWatch, eslint.format()))
             .pipe(gulpif(!config._isWatch, uglify()))
-            .pipe(gulpif(config._isRelease, wrapper({
-                header: function(file) {
-                    return Util.getBanner(file, config);
-                }
+            .pipe(gulpif(!config._isRelease, header(config.banner, {
+                date: Util.getTimeStr()
             })))
             .pipe(gulp.dest(config.dest))
             .on('end', cb)

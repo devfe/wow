@@ -12,7 +12,7 @@ var config = {
 
     // 代码头注释
     /*!base.js => 2015-51-20 17:21:6 */
-    banner: '/*!{{ file.data.name }} => {{ date }} */\n',
+    banner: '/*!{{ filename }} => {{ date }} */\n',
 
     // 文件目录
     source: 'app',
@@ -23,7 +23,7 @@ var config = {
         config: 'config.js'
     },
     view: 'views',
-    clean: ['.www', 'build', '**/_sprite.*'],
+    clean: ['.www', 'build'],
 
     // 匹配待目标文件
     views: ['app/views/*.html', 'app/{views,components}/*/*.html'],
