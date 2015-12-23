@@ -1,5 +1,5 @@
 var gulp       = require('gulp');
-var nodeSass   = require('gulp.sass');
+var sass       = require('gulp-sass');
 var minifyCss  = require('gulp-minify-css');
 var modify     = require('gulp-modify');
 var wrapper    = require('gulp-wrapper');
@@ -19,7 +19,7 @@ module.exports = function(config, file) {
         gulp.src(src, {
                 base: config.source
             }).
-            pipe(nodeSass())
+            pipe(sass())
         //sass(src, {
         //        base: config.source,
         //        style: 'compact'
