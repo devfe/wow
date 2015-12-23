@@ -1,6 +1,9 @@
 var fs   = require('fs');
 var path = require('path');
 
+var _      = require('lodash');
+_.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
+
 module.exports = {
     // file
     hasContents: function (file) {
@@ -41,8 +44,7 @@ module.exports = {
                 return '<'+ tagname +'></'+ tagname +'>'
         }
     },
-    getBanner: function (file, config) {
-        var filename = path.basename(file.path);
+    getBanner: function (tpl, data) {
         var now = new Date();
         var dateString = 'YY-DD-MM h:m:s'.replace('YY', now.getFullYear())
             .replace('DD', now.getDate())
@@ -51,8 +53,10 @@ module.exports = {
             .replace('m', now.getMinutes())
             .replace('s', now.getSeconds());
 
-        return config.banner
-            .replace('${filename}', filename)
-            .replace('${date}', dateString);
+        var compiled = _.template(tpl);
+
+        return compiled(_.assign({
+            date: dateString
+        }, data));
     }
 };

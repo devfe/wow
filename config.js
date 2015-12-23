@@ -12,7 +12,7 @@ var config = {
 
     // 代码头注释
     /*!base.js => 2015-51-20 17:21:6 */
-    banner: '/*!${filename} => ${date} */\n',
+    banner: '/*!{{ file.data.name }} => {{ date }} */\n',
 
     // 文件目录
     source: 'app',
