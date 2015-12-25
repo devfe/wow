@@ -1,6 +1,7 @@
 var path = require('path');
 
 var gulp       = require('gulp');
+var chokidar   = require('chokidar');
 var livereload = require('gulp-livereload');
 
 // tasks
@@ -12,15 +13,20 @@ var sass      = require('./sass');
 var Util = require('./utils');
 
 function watchRunTask(src, cb) {
-    gulp.watch(src)
-        .on('change', function(file) {
-            console.log('File changed =>' + Util.relativeDir(file.path));
-            cb(file);
+    chokidar.watch(src, {ignored: /[\/\\]\./})
+        .on('all', function(event, path) {
+            console.log(event);
+            if (event === 'add' || event === 'change') {
+                console.log('File ' + event + ' =>' + Util.dirToPath(Util.relativeDir(path)));
+                cb(path);
+            }
         });
 }
 
 module.exports = function (config) {
-    return function() {
+    return function(cb) {
+        cb = cb || function() {};
+
         livereload.listen({ basePath: config.server.dir });
 
         if (config._argv.c) {
@@ -41,12 +47,12 @@ module.exports = function (config) {
         watchRunTask(config.views[1], function (file) {
             nunjucks(config)();
         });
-
         watchRunTask(config.scripts, function (file) {
             uglify(config, file.path)();
         });
         watchRunTask(config.styles, function (file) {
             sass(config, file.path)();
         });
+        cb();
     }
 };
