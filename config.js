@@ -28,7 +28,7 @@ var config = {
     // 匹配待目标文件
     views: ['app/views/*.html', 'app/{views,components}/*/*.html'],
     styles: ['app/components/**/*.scss'],
-    scripts: ['app/components/**/*.js', '!**/config.js'],
+    scripts: ['app/components/**/*.js', '!app/components/**/config.js'],
     components: ['app/components/*/*'],
     images: ['./app/components/**/*.+(jpg|png|gif)', '!i/sprite-*.+(jpg|png|gif)'],
     tests: ['./app/tests/**/*'],

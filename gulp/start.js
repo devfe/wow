@@ -20,7 +20,9 @@ function watchRunTask(src, cb) {
 }
 
 module.exports = function (config) {
-    return function() {
+    return function(cb) {
+        cb = cb || function() {};
+
         livereload.listen({ basePath: config.server.dir });
 
         if (config._argv.c) {
@@ -41,12 +43,12 @@ module.exports = function (config) {
         watchRunTask(config.views[1], function (file) {
             nunjucks(config)();
         });
-
         watchRunTask(config.scripts, function (file) {
             uglify(config, file.path)();
         });
         watchRunTask(config.styles, function (file) {
             sass(config, file.path)();
         });
+        cb();
     }
 };
