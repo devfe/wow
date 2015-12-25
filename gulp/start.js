@@ -1,6 +1,7 @@
 var path = require('path');
 
 var gulp       = require('gulp');
+var chokidar   = require('chokidar');
 var livereload = require('gulp-livereload');
 
 // tasks
@@ -12,10 +13,13 @@ var sass      = require('./sass');
 var Util = require('./utils');
 
 function watchRunTask(src, cb) {
-    gulp.watch(src)
-        .on('change', function(file) {
-            console.log('File changed =>' + Util.relativeDir(file.path));
-            cb(file);
+    chokidar.watch(src, {ignored: /[\/\\]\./})
+        .on('all', function(event, path) {
+            console.log(event);
+            if (event === 'add' || event === 'change') {
+                console.log('File ' + event + ' =>' + Util.dirToPath(Util.relativeDir(path)));
+                cb(path);
+            }
         });
 }
 
