@@ -27,7 +27,7 @@ gulp.task('server', server(config));
 gulp.task('clean', clean(config));
 
 // Workflow tasks
-gulp.task('start', start(config));
+gulp.task('start', ['copy', 'server'], start(config));
 
 // Deployment tasks
 gulp.task('build', build(config));
