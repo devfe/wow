@@ -23,7 +23,7 @@ var config = {
         config: 'config.js'
     },
     view: 'views',
-    clean: ['.www', 'build'],
+    clean: ['.www', 'build', '.tmp'],
 
     // 匹配待目标文件
     views: ['app/views/*.html', 'app/{views,components}/*/*.html'],

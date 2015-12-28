@@ -19,10 +19,10 @@ module.exports = function(config, file) {
             .pipe(data(function (file) {
                 return Helper.getFileInfo(file.path);
             }))
-            .pipe(gulpif(!config._isWatch, eslint()))
-            .pipe(gulpif(!config._isWatch, eslint.format()))
+            .pipe(gulpif(config._isRelease, eslint()))
+            .pipe(gulpif(config._isRelease, eslint.format()))
             .pipe(gulpif(!config._isWatch, uglify()))
-            .pipe(gulpif(!config._isRelease, header(config.banner, {
+            .pipe(gulpif(config._isRelease, header(config.banner, {
                 date: Util.getTimeStr()
             })))
             .pipe(gulp.dest(config.dest))

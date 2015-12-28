@@ -42,7 +42,7 @@ module.exports = {
                 return '<'+ tagname +'></'+ tagname +'>'
         }
     },
-    getTimeStr: function (tpl, data) {
+    getTimeStr: function () {
         var now = new Date();
         var dateString = 'YY-DD-MM h:m:s'.replace('YY', now.getFullYear())
             .replace('DD', now.getDate())
