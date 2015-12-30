@@ -1,6 +1,7 @@
 var gulp       = require('gulp');
 var data       = require('gulp-data');
 var gulpif     = require('gulp-if');
+var plumber    = require('gulp-plumber');
 var livereload = require('gulp-livereload');
 
 var Util       = require('./utils');
@@ -143,6 +144,7 @@ module.exports = function(config, file) {
                     _components: config._components[file.path]
                 };
             }))
+            .pipe(plumber())
             .pipe(nunjucks())
             .pipe(gulp.dest(config.dest))
             .on('end', cb)

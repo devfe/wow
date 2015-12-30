@@ -5,6 +5,7 @@ var eslint     = require('gulp-eslint');
 var data       = require('gulp-data');
 var header     = require('gulp.header');
 var gulpif     = require('gulp-if');
+var plumber    = require('gulp-plumber');
 var livereload = require('gulp-livereload');
 
 var Util   = require('./utils');
@@ -21,6 +22,7 @@ module.exports = function(config, file) {
             }))
             .pipe(gulpif(config._isRelease, eslint()))
             .pipe(gulpif(config._isRelease, eslint.format()))
+            .pipe(gulpif(!config._isWatch, plumber()))
             .pipe(gulpif(!config._isWatch, uglify()))
             .pipe(gulpif(config._isRelease, header(config.banner, {
                 date: Util.getTimeStr()

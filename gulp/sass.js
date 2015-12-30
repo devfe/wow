@@ -5,6 +5,7 @@ var modify     = require('gulp-modify');
 var data       = require('gulp-data');
 var header     = require('gulp.header');
 var gulpif     = require('gulp-if');
+var plumber    = require('gulp-plumber');
 var livereload = require('gulp-livereload');
 
 var Util   = require('./utils');
@@ -23,6 +24,7 @@ module.exports = function(config, file) {
             .pipe(data(function (file) {
                 return Helper.getFileInfo(file.path);
             }))
+            .pipe(plumber())
             .pipe(sass())
             .pipe(gulpif(config.replaceCSSUrl, modify({
                 fileModifier: function(file) {
