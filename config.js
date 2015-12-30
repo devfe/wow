@@ -29,7 +29,7 @@ var config = {
     views: ['app/views/*.html', 'app/{views,components}/*/*.html'],
     styles: ['app/components/**/*.scss'],
     scripts: ['app/components/**/*.js', '!app/components/**/config.js'],
-    components: ['app/components/*/*'],
+    components: ['app/components/*/*.html'],
     images: ['./app/components/**/*.+(jpg|png|gif)', '!i/sprite-*.+(jpg|png|gif)'],
     tests: ['./app/tests/**/*'],
 
