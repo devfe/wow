@@ -19,7 +19,8 @@ module.exports = function (config) {
         gulp.src(sprite.src)
             .pipe(spritesmith({
                 imgName: sprite.imgName,
-                cssName: sprite.cssName
+                cssName: sprite.cssName,
+                cssTemplate: 'app/components/main/template.css.handlebars'
             }))
             .pipe(gulp.dest(sprite.dest))
             .pipe(pngFilter)
