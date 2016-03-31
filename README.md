@@ -1,3 +1,5 @@
+# Deprecated - All in one [wo](https://github.com/keelii/wo)
+
 # Wow
 
 [![Build Status](https://travis-ci.org/devfe/wow.svg?branch=master)](https://travis-ci.org/devfe/wow)
